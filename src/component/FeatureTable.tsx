@@ -1,4 +1,5 @@
 import color, { globalstyle } from "@/styles/global";
+import { getGlobalStyles } from "@/styles/globaltheme";
 import { Feature } from "@/types/type";
 import React from "react";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
@@ -18,7 +19,7 @@ interface FeatureTableProps {
  * @returns {JSX.Element} A table of features with a premium indicator
  */
 const FeatureTable: React.FC<FeatureTableProps> = ({ data }) => {
-
+    const globalstyle = getGlobalStyles();
 
     return (
         <View style={styles.container}>
@@ -53,7 +54,6 @@ const FeatureTable: React.FC<FeatureTableProps> = ({ data }) => {
  */
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: color.white,
         borderRadius: 16,
         padding: 16,
         borderWidth: 1,

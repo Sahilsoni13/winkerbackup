@@ -1,4 +1,6 @@
 import color, { globalstyle } from "@/styles/global";
+import { colors, getGlobalStyles } from "@/styles/globaltheme";
+import { useTheme } from "@/ThemeContext";
 import { ChatCardProps } from "@/types/type";
 import React from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
@@ -25,9 +27,15 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
  */
 
 const ChatCard: React.FC<ChatCardProps> = ({ item, onPress }) => {
+    const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
 
     return (
-        <TouchableOpacity key={item.id} style={styles.chatItem} onPress={() => onPress(item)}>
+
+        <TouchableOpacity key={item.id} style={[styles.chatItem, {
+            borderBottomWidth: 1,
+            borderBottomColor: isDarkMode ? colors.charcol60 : "#f5f5f5",
+        }]} onPress={() => onPress(item)}>
             <View style={styles.profileImageWrapper}>
                 <Image source={item.profileImage} style={styles.profileImage} />
                 <View style={styles.onlineDot} />
@@ -35,13 +43,13 @@ const ChatCard: React.FC<ChatCardProps> = ({ item, onPress }) => {
             <View style={styles.chatInfo}>
                 <Text style={globalstyle.text_16_bold_90}>{item.name}</Text>
                 <View style={styles.messageRow}>
-                    <Text style={[styles.messageText,globalstyle.text_14_reg_40]} numberOfLines={1}>
+                    <Text style={[styles.messageText, globalstyle.text_14_reg_40]} numberOfLines={1}>
                         {item.message}
                     </Text>
                 </View>
             </View>
             <View style={styles.rightSection}>
-                <Text style={[styles.timestamp,globalstyle.text_12_reg_90]}>{item.timestamp}</Text>
+                <Text style={[styles.timestamp, globalstyle.text_12_reg_90]}>{item.timestamp}</Text>
                 {item.notificationCount && (
                     <View style={styles.notificationBadge}>
                         <Text style={[globalstyle.text_12_reg_white]}>{item.notificationCount}</Text>
@@ -63,8 +71,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 24,
-        borderBottomWidth: 1,
-        borderBottomColor: '#F5F5F5',
     },
     profileImageWrapper: {
         position: 'relative',

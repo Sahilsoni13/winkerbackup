@@ -1,5 +1,7 @@
 import Button from '@/component/Button';
 import color, { globalstyle } from '@/styles/global';
+import { colors, getGlobalStyles } from '@/styles/globaltheme';
+import { useTheme } from '@/ThemeContext';
 import { GameImages } from '@/types/type';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
@@ -143,11 +145,18 @@ const RockPaperScissorsScreen: React.FC = () => {
         inputRange: [0, 1],
         outputRange: ["0deg", "360deg"],
     });
+
+    const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
+
     return (
         <View style={[styles.container, globalstyle.container]}>
             {/* Back Arrow */}
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                <Image style={{ width: 24, height: 24 }} source={require("../assets/icons/backarrow.png")} />
+                <Image style={{
+                    width: 24, height: 24,
+                    tintColor: isDarkMode ? colors.white : colors.black
+                }} source={require("../assets/icons/backarrow.png")} />
             </TouchableOpacity>
 
             {/* Title and Description */}
@@ -214,14 +223,16 @@ const RockPaperScissorsScreen: React.FC = () => {
             <View style={styles.resultContainer}>
                 {gameState === 'waiting' ?
                     (
-                        <View style={styles.waitingContainer}>
+                        <View style={[styles.waitingContainer, { backgroundColor: isDarkMode ? colors.charcol100 : colors.charcol05 }]}>
                             <Animated.Image
                                 source={require("../assets/icons/loader.png")}
-                                style={{
+                                style={[{
                                     width: 20,
                                     height: 20,
                                     transform: [{ rotate: rotateInterpolate }],
-                                }}
+
+
+                                }, { tintColor: isDarkMode ? colors.white : colors.black }]}
                             />
                             <Text style={globalstyle.text_16_med_100}>{resultMessage}</Text>
                         </View>
@@ -324,7 +335,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: color.charcol10,
         gap: 16,
-        backgroundColor: color.charcol05,
         borderRadius: 12,
         padding: 16
     },

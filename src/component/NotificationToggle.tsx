@@ -107,7 +107,8 @@
 
 
 import color, { globalstyle } from "@/styles/global";
-import { getGlobalStyles } from "@/styles/globaltheme";
+import { colors, getGlobalStyles } from "@/styles/globaltheme";
+import { useTheme } from "@/ThemeContext";
 import { NotificationToggleProps } from "@/types/type";
 import React, { useRef, useEffect } from "react";
 import {
@@ -143,10 +144,11 @@ const NotificationToggle: React.FC<NotificationToggleProps> = ({
         onToggle?.(!isEnabled); // ✅ Notify parent to toggle
     };
     const globalstyle = getGlobalStyles();
-    
+    const { isDarkMode } = useTheme();
+
     return (
         <View style={styles.container}>
-            <Image source={iconSource} style={styles.icon} />
+            <Image source={iconSource} style={[styles.icon, { tintColor: isDarkMode ? colors.white : colors.black }]} />
             <View style={styles.textContainer}>
                 <Text style={[globalstyle.text_16_bold_100]}>{title}</Text>
                 <Text style={[styles.description, globalstyle.text_14_reg_50]}>
@@ -176,7 +178,6 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         alignItems: "flex-start",
-        backgroundColor: "#FFFFFF",
         justifyContent: "flex-start",
     },
     icon: {

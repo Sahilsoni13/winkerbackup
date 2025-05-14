@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {  StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import NotificationToggle from '../NotificationToggle'
 import Checkbox from '../Checkbox'
 import { useTheme } from '@/ThemeContext'
@@ -16,20 +16,31 @@ const AccountSetupStep3 = () => {
   const [accepted, setAccepted] = useState<boolean>(false);
   const { isDarkMode } = useTheme();
   const globalstyle = getGlobalStyles();
+  const [location, setLocation] = useState<boolean>(false)
+  const [notification, setNotification] = useState<boolean>(false)
+
   return (
     <View style={styles.content}>
       <Text style={[styles.subHeader, globalstyle.text_22_bold_90]}>Enable Key Features</Text>
-      <View style={styles.Termskeyfeatures} >
-        <View style={styles.keyfeaturescantainer} >
+      <View style={styles.Termskeyfeatures}>
+        <View style={styles.keyfeaturescantainer}>
           <NotificationToggle
             title={"Location"}
             description={"Location access is required to connect you with people nearby and ensure the app functions properly."}
             iconSource={require("@/assets/icons/location.png")}
+            isEnabled={location}
+            onToggle={() => {
+              setLocation(!location)
+            }}
           />
           <NotificationToggle
             title={"Notification"}
             description={"Location access is required to connect you with people nearby and ensure the app functions properly."}
             iconSource={require("@/assets/icons/notificationicon.png")}
+            isEnabled={notification}
+            onToggle={() => {
+              setNotification(!notification)
+            }}
           />
         </View>
         <TouchableOpacity onPress={() => setAccepted(!accepted)} style={styles.acceptTerms} >

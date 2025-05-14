@@ -1,4 +1,6 @@
-import color, { globalstyle } from '@/styles/global';
+import color from '@/styles/global';
+import { colors, getGlobalStyles } from '@/styles/globaltheme';
+import { useTheme } from '@/ThemeContext';
 import { AroundMeCardProps } from '@/types/type';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
@@ -21,9 +23,16 @@ const AroundMeCard: React.FC<AroundMeCardProps> = ({ name, age, location, image 
     /** Navigation object to handle screen transitions */
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
 
+
+
+
+    const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
+
+
     return (
         <TouchableOpacity onPress={() => navigation.navigate("UserDetails")} >
-            <View style={[styles.card, globalstyle.border]}>
+            <View style={[styles.card, !isDarkMode && globalstyle.border, { backgroundColor: isDarkMode ? colors.charcol80 : colors.white }]}>
                 {/* User profile image */}
                 <Image source={image} style={styles.image} />
                 {/* User details container */}
@@ -35,10 +44,10 @@ const AroundMeCard: React.FC<AroundMeCardProps> = ({ name, age, location, image 
                         <Text style={[globalstyle.text_14_reg_40]}>{location}</Text>
                     </View>
                     {/* Wink button */}
-                    <TouchableOpacity style={styles.button} onPress={() => setWink("winked")}>
+                    <TouchableOpacity style={[styles.button, { backgroundColor: isDarkMode ? colors.white : colors.charcol100 }]} onPress={() => setWink("winked")}>
                         <View style={styles.btncantainer} >
-                            <Image source={require("../assets/icons/lightwight.png")} style={styles.locationimg} />
-                            <Text style={[globalstyle.text_14_reg_white]}>{wink}</Text>
+                            <Image source={require("../assets/icons/lightwight.png")} style={[styles.locationimg, { tintColor: isDarkMode ? colors.black : colors.white }]} />
+                            <Text style={[globalstyle.text_14_reg_white, { color: isDarkMode ? colors.charcol100 : colors.white }]}>{wink}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -46,10 +55,12 @@ const AroundMeCard: React.FC<AroundMeCardProps> = ({ name, age, location, image 
         </TouchableOpacity>
     );
 };
+
 /**
  * Styles for the AroundMeCard component
  * @type {Object}
  */
+
 const styles = StyleSheet.create({
     locationimg: {
         width: 16,

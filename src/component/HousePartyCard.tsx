@@ -1,6 +1,6 @@
 
-
-import color, { globalstyle } from '@/styles/global';
+import { colors, getGlobalStyles } from '@/styles/globaltheme';
+import { useTheme } from '@/ThemeContext';
 import React from 'react'
 import { Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -28,21 +28,24 @@ type HousePartyCardProps = {
 
 const HousePartyCard: React.FC<HousePartyCardProps> = ({ name, location, image, onPress }) => {
 
+    const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
+
     return (
-        <View style={[styles.card, globalstyle.border]}>
+        <View style={[styles.card, !isDarkMode && globalstyle.border, { backgroundColor: isDarkMode ? colors.charcol80 : colors.white }]}>
             <View style={styles.imageContainer}>
                 <Image source={image} style={styles.image} />
-                <View style={styles.cardUpdates}>
-                    <Text style={[globalstyle.text_12_reg_90, { lineHeight: 13 }]}>Social</Text>
+                <View style={[styles.cardUpdates, { backgroundColor: isDarkMode ? colors.white : colors.charcol100 }]}>
+                    <Text style={[globalstyle.text_12_reg_90, { lineHeight: 13, color: isDarkMode ? colors.charcol100 : colors.white }]}>Social</Text>
                 </View>
             </View>
             <View style={styles.textContainer}>
                 <Text style={[globalstyle.text_16_bold_90]}>{name}</Text>
                 <Text style={[styles.location, globalstyle.text_14_reg_40]}>{location}</Text>
-                <TouchableOpacity onPress={onPress} style={styles.button}>
+                <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor: isDarkMode ? colors.white : colors.charcol100 }]}>
                     <View style={styles.btncantainer} >
-                        <Image source={require("../assets/icons/addwhite.png")} style={styles.locationimg} />
-                        <Text style={[globalstyle.text_14_reg_white]}> Join Party</Text>
+                        <Image source={require("../assets/icons/addwhite.png")} style={[styles.locationimg, { tintColor: isDarkMode ? colors.black : colors.white }]} />
+                        <Text style={[globalstyle.text_14_reg_white, { color: isDarkMode ? colors.charcol100 : colors.white }]}> Join Party</Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -60,7 +63,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 5,
         left: 5,
-        backgroundColor: color.charcol05,
+
         paddingHorizontal: 8,
         paddingVertical: 4,
         borderRadius: 15,
@@ -82,7 +85,7 @@ const styles = StyleSheet.create({
     card: {
         flexDirection: "row",
         padding: 8,
-        backgroundColor: color.white,
+
         borderRadius: 16,
         alignItems: "center",
         gap: 15
@@ -103,7 +106,6 @@ const styles = StyleSheet.create({
         alignSelf: "flex-start",
         paddingVertical: 4,
         paddingHorizontal: 12,
-        backgroundColor: color.charcol100,
         borderRadius: 40,
         alignItems: "center",
         width: "auto"

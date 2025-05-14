@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { withSpring, useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
 import color, { globalstyle } from '@/styles/global';
+import { useTheme } from '@/ThemeContext';
 /** Screen width for calculating tab sizes */
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 /** Dark-themed icons for tabs */
@@ -102,17 +103,21 @@ const NewBottomTabs: React.FC<BottomTabBarProps> = ({ navigation }) => {
     }, [activeTabWidth, inactiveTabWidth, activeTab]);
 
 
-    
+
+    const { isDarkMode } = useTheme();
     return (
         <>
             <View style={{ position: "relative" }}>
-                <LinearGradient
-                    pointerEvents="none"
-                    colors={['rgba(255, 255, 255, 0.00)', 'rgba(255, 255, 255, 0.55)', '#FFFFFF',]}
-                    locations={[0.0108, 0.5479, 0.9274]} // Percentages ko 0-1 scale mein convert kiya
-                    angle={359} // 359 degrees direction
-                    style={{ flexDirection: "column", justifyContent: "flex-end", position: "absolute", bottom: 0, left: 0, right: 0, height: 180, }}
-                />
+                {
+                    !isDarkMode &&
+                    <LinearGradient
+                        pointerEvents="none"
+                        colors={['rgba(255, 255, 255, 0.00)', 'rgba(255, 255, 255, 0.55)', '#FFFFFF',]}
+                        locations={[0.0108, 0.5479, 0.9274]} // Percentages ko 0-1 scale mein convert kiya
+                        angle={359} // 359 degrees direction
+                        style={{ flexDirection: "column", justifyContent: "flex-end", position: "absolute", bottom: 0, left: 0, right: 0, height: 180, }}
+                    />
+                }
                 <GestureHandlerRootView style={styles.container}>
                     <View style={styles.navBar}>
                         <Animated.View style={[styles.activeTabBackground, { width: activeTabWidth }, backgroundStyle]} />

@@ -22,7 +22,15 @@ const GeneralSetting = () => {
                 onRightPress={() => console.log("onRightPress")}
             />
             <View style={[style.generalContainer]}>
-                <DropdownFeature option={["english", "spain", "hindi", "punjabi"]} defaultvalue='English' description='Choose your preferred app language.' iconSource={require("@/assets/icons/language.png")} title='Language' />
+
+                <DropdownFeature
+                    option={["english", "spain", "hindi", "punjabi"]}
+                    defaultvalue='English'
+                    description='Choose your preferred app language.'
+                    iconSource={require("@/assets/icons/language.png")}
+                    title='Language'
+                />
+
                 {/* <NotificationToggle description={"Switch between light mode, dark mode."} iconSource={require("@/assets/icons/theme.png")} title={"Theme"} /> */}
                 <NotificationToggle
                     description="Switch between light mode, dark mode."

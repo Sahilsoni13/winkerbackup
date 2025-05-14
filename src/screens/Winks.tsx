@@ -1,5 +1,6 @@
 import AroundMeCard from '@/component/AroundMeCard';
 import color, { globalstyle } from '@/styles/global';
+import { getGlobalStyles } from '@/styles/globaltheme';
 import { AroundMeCardProps } from '@/types/type';
 import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -40,7 +41,7 @@ const Winks = () => {
         { name: "Maya", age: 20, location: "New York, NY", image: imageMap["cardimg3.png"], wink: "Wink Back" },
     ];
 
-
+    const globalstyle = getGlobalStyles();
     return (
         <View style={[styles.container, globalstyle.container]}>
             <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
