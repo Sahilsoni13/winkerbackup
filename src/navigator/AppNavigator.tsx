@@ -21,15 +21,14 @@ import color from '@/styles/global';
 
 const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
-
-  const { isDarkMode } = useTheme();
+const { isDarkMode } = useTheme();
 
   return (
     <Stack.Navigator
       screenOptions={{
-        contentStyle: { backgroundColor: isDarkMode ? color.charcol90 : color.white }, 
+        contentStyle: { backgroundColor: isDarkMode ? color.charcol90 : color.white },
       }}
-      initialRouteName="SplashScreen"
+      initialRouteName="MainTab"
     >
       <Stack.Screen
         name="MainTab"

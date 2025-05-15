@@ -39,7 +39,7 @@ const HeaderBack: React.FC<HeaderProps> = ({ title, rightIcon, onRightPress }) =
             {/* Right Icon (Optional) */}
             {rightIcon ? (
                 <TouchableOpacity onPress={onRightPress}>
-                    <Image source={rightIcon} style={styles.icon} />
+                    <Image source={rightIcon} style={[styles.icon,{ tintColor: isDarkMode ? colors.white : colors.black }]} />
                 </TouchableOpacity>
             ) : (
                 <View style={styles.spacer} /> // Empty View to Balance Layout
