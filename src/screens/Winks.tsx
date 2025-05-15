@@ -30,15 +30,15 @@ const Winks = () => {
      * @constant {AroundMeCardProps[]} aroundMeData - Array of data for people who have winked at the user
      */
     const aroundMeData: AroundMeCardProps[] = [
-        { name: "Emma", age: 27, location: "New York, NY", image: imageMap["cardimg1.png"], wink: "Wink Back" },
-        { name: "Tyler", age: 24, location: "New York, NY", image: imageMap["cardimg2.png"], wink: "Wink Back" },
-        { name: "Emma", age: 27, location: "New York, NY", image: imageMap["cardimg1.png"], wink: "Wink Back" },
-        { name: "Maya", age: 20, location: "New York, NY", image: imageMap["cardimg3.png"], wink: "Wink Back" },
-        { name: "Emma", age: 27, location: "New York, NY", image: imageMap["cardimg1.png"], wink: "Wink Back" },
-        { name: "Maya", age: 20, location: "New York, NY", image: imageMap["cardimg3.png"], wink: "Wink Back" },
-        { name: "Tyler", age: 24, location: "New York, NY", image: imageMap["cardimg2.png"], wink: "Wink Back" },
-        { name: "Emma", age: 27, location: "New York, NY", image: imageMap["cardimg1.png"], wink: "Wink Back" },
-        { name: "Maya", age: 20, location: "New York, NY", image: imageMap["cardimg3.png"], wink: "Wink Back" },
+        { name: "Emma", age: 27, location: "New York, NY", image: imageMap["cardimg1.png"],  },
+        { name: "Tyler", age: 24, location: "New York, NY", image: imageMap["cardimg2.png"],  },
+        { name: "Emma", age: 27, location: "New York, NY", image: imageMap["cardimg1.png"],  },
+        { name: "Maya", age: 20, location: "New York, NY", image: imageMap["cardimg3.png"],  },
+        { name: "Emma", age: 27, location: "New York, NY", image: imageMap["cardimg1.png"],  },
+        { name: "Maya", age: 20, location: "New York, NY", image: imageMap["cardimg3.png"],  },
+        { name: "Tyler", age: 24, location: "New York, NY", image: imageMap["cardimg2.png"],  },
+        { name: "Emma", age: 27, location: "New York, NY", image: imageMap["cardimg1.png"],  },
+        { name: "Maya", age: 20, location: "New York, NY", image: imageMap["cardimg3.png"],  },
     ];
 
     const globalstyle = getGlobalStyles();
@@ -60,7 +60,7 @@ const Winks = () => {
                                 age={person.age}
                                 location={person.location}
                                 image={person.image}
-                                wink={person.wink}
+                                // wink={person.wink}
                             />
                         ))}
                     </View>

@@ -3,6 +3,8 @@ import { Modal, Text, TouchableOpacity, View, StyleSheet, Image } from 'react-na
 import Button from '../Button';
 import { HousePartyFilterModalProps } from '@/types/type';
 import color, { globalstyle } from '@/styles/global';
+import { colors, getGlobalStyles } from '@/styles/globaltheme';
+import { useTheme } from '@/ThemeContext';
 
 /**
  * @function HousePartyFilterModal
@@ -35,7 +37,8 @@ const HousePartyFilterModal = ({ onClose, options }: HousePartyFilterModalProps)
     const clearSelection = () => {
         setSelectedOptions([]); // Reset selection
     };
-
+ const globalstyle = getGlobalStyles();
+const { isDarkMode } = useTheme();
     return (
         <Modal transparent visible animationType="fade" onRequestClose={onClose}>
             <TouchableOpacity
@@ -45,7 +48,7 @@ const HousePartyFilterModal = ({ onClose, options }: HousePartyFilterModalProps)
             >
                 <TouchableOpacity
                     activeOpacity={1} // Prevents closing when clicking inside modal content
-                    style={styles.modalContent}
+                    style={[styles.modalContent,globalstyle.container]}
                     onPress={(e) => e.stopPropagation()} // Stop propagation to overlay
                 >
                     <View style={{
@@ -55,7 +58,7 @@ const HousePartyFilterModal = ({ onClose, options }: HousePartyFilterModalProps)
 
                         <Text style={[styles.modalTitle, globalstyle.text_20_bold_90]}>Filter</Text>
                         <TouchableOpacity onPress={onClose}>
-                            <Image source={require("@/assets/icons/close.png")} style={{ width: 20, height: 20 }} />
+                            <Image source={require("@/assets/icons/close.png")} style={{ width: 20, height: 20,tintColor: isDarkMode ? colors.white : colors.black }} />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.filterOptions}>
@@ -64,7 +67,7 @@ const HousePartyFilterModal = ({ onClose, options }: HousePartyFilterModalProps)
                                 key={index}
                                 style={[
                                     styles.optionButton,
-                                    selectedOptions.includes(option) && styles.selectedButton,
+                                    selectedOptions.includes(option) ? isDarkMode? {backgroundColor:color.purple50}:{backgroundColor:colors.purple50}:isDarkMode?{backgroundColor:colors.charcol90}:{backgroundColor:colors.charcol05},
                                 ]}
                                 onPress={() => handleSelect(option)}
                             >
@@ -98,7 +101,7 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         width: '90%',
-        backgroundColor: color.white,
+        // backgroundColor: color.white,
         borderRadius: 20,
         padding: 24,
     },

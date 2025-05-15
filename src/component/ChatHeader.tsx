@@ -1,4 +1,6 @@
-import color, { globalstyle } from '@/styles/global';
+import color from '@/styles/global';
+import { colors, getGlobalStyles } from '@/styles/globaltheme';
+import { useTheme } from '@/ThemeContext';
 import { ChatHeaderProps } from '@/types/type';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react';
@@ -10,13 +12,14 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ title, isGroup, status, peopleC
      * @constant {NavigationProp} navigation - Navigation object to handle screen transitions.
      */
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
-
+    const { isDarkMode } = useTheme();
+    const globalstyle = getGlobalStyles();
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container,{backgroundColor:isDarkMode ? colors.charcol100 : colors.white}]}>
             {/* Back Button */}
             <TouchableOpacity onPress={() => navigation.goBack()} >
-                <Image style={{ width: 24, height: 24 }} source={require("@/assets/icons/backarrow.png")} />
+                <Image style={{ width: 24, height: 24,tintColor:isDarkMode?colors.white:colors.charcol90 }} source={require("@/assets/icons/backarrow.png")} />
             </TouchableOpacity>
 
             {/* Chat Info */}
@@ -29,7 +32,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ title, isGroup, status, peopleC
 
             {/* Options Button */}
             <TouchableOpacity onPress={onOptions} >
-                <Image style={{ width: 24, height: 24 }} source={require("@/assets/icons/threedots.png")} />
+                <Image style={{ width: 24, height: 24,tintColor:isDarkMode?colors.white:colors.charcol90 }} source={require("@/assets/icons/threedots.png")} />
             </TouchableOpacity>
         </View>
     );
@@ -42,7 +45,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingVertical: 8,
-        backgroundColor: color.white,
     },
     info: {
         flex: 1,

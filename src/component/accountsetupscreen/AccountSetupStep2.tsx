@@ -21,7 +21,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { CircularProgress } from 'react-native-circular-progress';
 import Svg, { Circle } from 'react-native-svg';
-import { colors, getGlobalStyles } from '@/styles/globaltheme';
+import { color, colors, getGlobalStyles } from '@/styles/globaltheme';
+import { useTheme } from '@/ThemeContext';
 
 
 /**
@@ -224,6 +225,8 @@ const AccountSetupStep2: React.FC = () => {
 
 
     const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
+    const theme = isDarkMode ? color.dark : color.light;
     return (
         <View style={styles.content}>
             <Text style={[styles.title, globalstyle.text_22_bold_90]}>Add Your Photo & Aura!</Text>
@@ -250,7 +253,7 @@ const AccountSetupStep2: React.FC = () => {
                                 <Image source={{ uri: image }} style={styles.profileImage} />
                             ) : (
                                 <Image
-                                    style={styles.addIcon}
+                                    style={[styles.addIcon,{tintColor:isDarkMode?colors.white:colors.black}]}
                                     source={require('../../assets/icons/add.png')}
                                 />
                             )}
@@ -279,7 +282,7 @@ const AccountSetupStep2: React.FC = () => {
                 style={[styles.textArea, globalstyle.text_16_reg_50]}
                 placeholder="Your Aura is your energy. Use it to introduce yourself in short."
                 value={aura}
-                placeholderTextColor={colors.charcol50}
+                placeholderTextColor={theme.charcol50}
                 onChangeText={setAura}
                 multiline
             />

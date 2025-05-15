@@ -3,6 +3,8 @@ import { Modal, Text, TouchableOpacity, View, StyleSheet, Image } from 'react-na
 import Button from '../Button';
 import { AroundMeFilterModalProps } from '@/types/type';
 import color, { globalstyle } from '@/styles/global';
+import { colors, getGlobalStyles } from '@/styles/globaltheme';
+import { useTheme } from '@/ThemeContext';
 
 
 
@@ -33,7 +35,8 @@ const AroundMeFilterModal = ({ onClose, options }: AroundMeFilterModalProps) => 
     const clearSelection = () => {
         setSelectedOption(null);
     };
-
+ const globalstyle = getGlobalStyles();
+const { isDarkMode } = useTheme();
     return (
         <Modal transparent visible animationType="fade" onRequestClose={onClose}>
             <TouchableOpacity
@@ -43,7 +46,7 @@ const AroundMeFilterModal = ({ onClose, options }: AroundMeFilterModalProps) => 
             >
                 <TouchableOpacity
                     activeOpacity={1} // Prevents closing when clicking inside modal content
-                    style={styles.modalContent}
+                             style={[styles.modalContent,globalstyle.container]}
                     onPress={(e) => e.stopPropagation()} // Stop propagation to overlay
                 >
                     <View style={{
@@ -53,7 +56,7 @@ const AroundMeFilterModal = ({ onClose, options }: AroundMeFilterModalProps) => 
 
                         <Text style={[styles.modalTitle, globalstyle.text_20_bold_90]}>Filter</Text>
                         <TouchableOpacity onPress={onClose}>
-                        <Image source={require("@/assets/icons/close.png")} style={{ width: 20, height: 20 }} />
+                   <Image source={require("@/assets/icons/close.png")} style={{ width: 20, height: 20,tintColor: isDarkMode ? colors.white : colors.black }} />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.filterOptions}>
@@ -62,7 +65,7 @@ const AroundMeFilterModal = ({ onClose, options }: AroundMeFilterModalProps) => 
                                 key={index}
                                 style={[
                                     styles.optionButton,
-                                    selectedOption === option && styles.selectedButton,
+                                    selectedOption === option? isDarkMode? {backgroundColor:color.purple50}:{backgroundColor:colors.purple50}:isDarkMode?{backgroundColor:colors.charcol90}:{backgroundColor:colors.charcol05},
                                 ]}
                                 onPress={() => handleSelect(option)}
                             >
@@ -96,7 +99,6 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         width: '90%',
-        backgroundColor: color.white,
         borderRadius: 20,
         padding: 24,
     },
@@ -110,7 +112,6 @@ const styles = StyleSheet.create({
         marginBottom: 36,
     },
     optionButton: {
-        backgroundColor: color.charcol05,
         paddingVertical: 8,
         paddingHorizontal: 22,
         borderRadius: 20,

@@ -1,5 +1,7 @@
 import HeaderBack from '@/component/HeaderBack';
 import color, { globalstyle } from '@/styles/global';
+import { colors, getGlobalStyles } from '@/styles/globaltheme';
+import { useTheme } from '@/ThemeContext';
 import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -24,7 +26,8 @@ const UserDetails = () => {
         joinedParties: ['Tech Group', 'Chess group', "McDonald's group",],
         profileImage: require('../assets/images/cardimg3.png'),
     };
-
+const globalstyle = getGlobalStyles();
+const { isDarkMode } = useTheme();
     return (
 
 
@@ -45,9 +48,9 @@ const UserDetails = () => {
                     <View style={styles.locationContainer}>
                         <Image
                             source={require('../assets/icons/location.png')}
-                            style={styles.locationIcon}
+                            style={[styles.locationIcon,{ tintColor: isDarkMode ? colors.white : colors.black }]}
                         />
-                        <Text style={styles.locationText}>{user.location}</Text>
+                        <Text style={[globalstyle.text_18_reg_90]}>{user.location}</Text>
                     </View>
                 </View>
 
@@ -60,7 +63,7 @@ const UserDetails = () => {
                             My Aura <Text>✨</Text>
                         </Text>
                         <View style={[styles.bioContainer, globalstyle.border]}>
-                            <Text style={globalstyle.text_14_reg_60}>{user.bio}</Text>
+                            <Text style={[globalstyle.text_14_reg_60,{color:isDarkMode?colors.charcol30:colors.charcol60}]}>{user.bio}</Text>
                         </View>
                     </View>
                     {/* Joined Parties Section */}
@@ -72,7 +75,7 @@ const UserDetails = () => {
                             {
                                 user?.joinedParties?.map((item, index) => {
                                     return (
-                                        <View key={Date.now() + index + "joinedlist"} style={styles.partyTag}>
+                                        <View key={Date.now() + index + "joinedlist"} style={[styles.partyTag,{backgroundColor:isDarkMode?color.charcol80:colors.charcol05}]}>
                                             <Text style={globalstyle.text_14_semi_90}>{item}</Text>
                                         </View>
                                     )
@@ -166,7 +169,7 @@ const styles = StyleSheet.create({
         borderRadius: 16
     },
     partyTag: {
-        backgroundColor: color.charcol05,
+        // backgroundColor: color.charcol05,
         borderRadius: 8,
         paddingVertical: 8,
         paddingHorizontal: 16,

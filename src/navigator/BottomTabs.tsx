@@ -7,6 +7,7 @@ import Animated, { withSpring, useSharedValue, useAnimatedStyle } from 'react-na
 import LinearGradient from 'react-native-linear-gradient';
 import color, { globalstyle } from '@/styles/global';
 import { useTheme } from '@/ThemeContext';
+import { colors } from '@/styles/globaltheme';
 /** Screen width for calculating tab sizes */
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 /** Dark-themed icons for tabs */
@@ -107,7 +108,10 @@ const NewBottomTabs: React.FC<BottomTabBarProps> = ({ navigation }) => {
     const { isDarkMode } = useTheme();
     return (
         <>
-            <View style={{ position: "relative" }}>
+            <View style={{
+                position: "relative",
+                backgroundColor: isDarkMode ? colors.charcol100 : colors.white
+            }}>
                 {
                     !isDarkMode &&
                     <LinearGradient
@@ -119,7 +123,7 @@ const NewBottomTabs: React.FC<BottomTabBarProps> = ({ navigation }) => {
                     />
                 }
                 <GestureHandlerRootView style={styles.container}>
-                    <View style={styles.navBar}>
+                    <View style={[styles.navBar, { backgroundColor: isDarkMode ? colors.black : colors.charcol100 }]}>
                         <Animated.View style={[styles.activeTabBackground, { width: activeTabWidth }, backgroundStyle]} />
                         {tabs && tabs?.map((tab, index) => (
                             <TouchableOpacity
@@ -172,11 +176,11 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginBottom: 17,
         position: "relative",
-        zIndex: 3
+        zIndex: 3,
     },
     navBar: {
         flexDirection: 'row',
-        backgroundColor: color.charcol100,
+        // backgroundColor: color.charcol100,
         paddingVertical: 10,
         borderRadius: 30,
         alignItems: 'center',

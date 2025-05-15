@@ -1,5 +1,6 @@
 import color, { globalstyle } from "@/styles/global";
 import { getGlobalStyles } from "@/styles/globaltheme";
+import { useTheme } from "@/ThemeContext";
 import { Feature } from "@/types/type";
 import React from "react";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
@@ -20,6 +21,8 @@ interface FeatureTableProps {
  */
 const FeatureTable: React.FC<FeatureTableProps> = ({ data }) => {
     const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
+
 
     return (
         <View style={styles.container}>
@@ -37,7 +40,7 @@ const FeatureTable: React.FC<FeatureTableProps> = ({ data }) => {
                 renderItem={({ item }) => (
                     <View style={styles.row}>
                         <Text style={[styles.cell, styles.flex2, globalstyle.text_12_reg_50]}>{item.name}</Text>
-                        <Text style={styles.cell}>{item.free}</Text>
+                        <Text style={[styles.cell, { color: isDarkMode ? color.white : color.black }]}>{item.free}</Text>
                         <View style={styles.cell}>
                             {item.premium && <Image source={require("../assets/icons/purpletick.png")} style={styles.checkIcon} />}
                         </View>

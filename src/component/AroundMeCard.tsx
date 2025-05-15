@@ -40,7 +40,7 @@ const AroundMeCard: React.FC<AroundMeCardProps> = ({ name, age, location, image 
                     <Text style={[globalstyle.text_16_bold_90]}>{name}, {age}</Text>
                     {/* Location section */}
                     <View style={styles.locationbox} >
-                        <Image source={require("../assets/icons/location.png")} style={styles.locationimg} />
+                        <Image source={require("../assets/icons/location.png")} style={[styles.locationimg,{tintColor: isDarkMode ? colors.white : colors.black}]} />
                         <Text style={[globalstyle.text_14_reg_40]}>{location}</Text>
                     </View>
                     {/* Wink button */}
