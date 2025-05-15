@@ -16,15 +16,21 @@ import OnboardingScreen from '@/screens/OnboardingScreen';
 import ForgotPassword from '@/screens/ForgotPassword';
 import SplashScreen from '@/screens/SplashScreen';
 import ChatScreen from '@/screens/ChatScreen';
+import { getGlobalStyles } from '@/styles/globaltheme';
+import { useTheme } from '@/ThemeContext';
+import color from '@/styles/global';
 
 const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
+
+  const { isDarkMode } = useTheme();
+
   return (
     <Stack.Navigator
       screenOptions={{
-        contentStyle: { backgroundColor: "#FFFFFF" },
+        contentStyle: { backgroundColor: isDarkMode ? color.charcol90 : color.white },
       }}
-      initialRouteName="AccountSetupScreen"
+      initialRouteName="SplashScreen"
     >
       <Stack.Screen
         name="MainTab"

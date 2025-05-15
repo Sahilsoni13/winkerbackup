@@ -1,6 +1,8 @@
 
 
 import color, { globalstyle } from "@/styles/global";
+import { colors, getGlobalStyles } from "@/styles/globaltheme";
+import { useTheme } from "@/ThemeContext";
 import { SecurityToggleProps } from "@/types/type";
 import React from "react";
 import {
@@ -23,18 +25,22 @@ import {
  * @param {() => void} props.onPress - Callback function triggered when the toggle button is pressed
  * @returns {JSX.Element} The security toggle component
  */
+
 const SecurityToggle: React.FC<SecurityToggleProps> = ({ iconSource, description, title, buttonText, onPress }) => {
-    
+
+    const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
+
     return (
         <View style={styles.container}>
-            <Image source={iconSource} style={styles.icon} />
+            <Image source={iconSource} style={[styles.icon, { tintColor: isDarkMode ? colors.white : colors.black }]} />
             <View style={styles.textContainer}>
                 <Text style={[globalstyle.text_16_bold_100]}>{title}</Text>
                 <Text style={[styles.description, globalstyle.text_14_reg_50]}>{description}</Text>
             </View>
             <TouchableOpacity onPress={onPress}>
-                <View style={{ paddingVertical: 4, paddingHorizontal: 12, backgroundColor: color.charcol10, borderRadius: 28 }}>
-                    <Text style={[globalstyle.text_12_med_90]}>{buttonText}</Text>
+                <View style={{ paddingVertical: 4, paddingHorizontal: 12, backgroundColor: isDarkMode ? color.white : color.charcol10, borderRadius: 28 }}>
+                    <Text style={[globalstyle.text_12_med_90, { color: isDarkMode ? colors.black : colors.charcol90 }]}>{buttonText}</Text>
                 </View>
             </TouchableOpacity>
         </View>
@@ -48,7 +54,6 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         alignItems: "flex-start",
-        backgroundColor: "#FFFFFF",
         justifyContent: "flex-start"
     },
     icon: {

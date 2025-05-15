@@ -4,7 +4,8 @@ import Input from "@/component/Input";
 import AroundMeFilterModal from "@/component/models/AroundMeFilterModal";
 import HousePartyFilterModal from "@/component/models/HousePartyFilterModal";
 import WelcomePopup from "@/component/models/WelcomePopup";
-import color, { globalstyle } from "@/styles/global";
+import { colors, getGlobalStyles } from "@/styles/globaltheme";
+import { useTheme } from "@/ThemeContext";
 import { AroundMeCardProps, HousePartyCardProps } from "@/types/type";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
@@ -102,10 +103,10 @@ const PartyScreen: React.FC = () => {
 
     const HousePartyoptions = ["Social", "Collage", "Tea", "Tech", "Anime", "Gaming", "Manga", "Space", "Theories"];
 
-
-
+    const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
     return (
-        <View style={[globalstyle.container, { backgroundColor: color.white, flex: 1, }]}>
+        <View style={[globalstyle.container, { flex: 1, }]}>
             <View style={{ paddingTop: 16 }}>
                 <Input
                     placeholder="Search"
@@ -116,20 +117,20 @@ const PartyScreen: React.FC = () => {
                     <View style={[styles.tabbox, globalstyle.border]} >
                         <TouchableOpacity
                             onPress={() => setActiveTab("houseParty")}
-                            style={[styles.tabButton, activeTab === "houseParty" && styles.activeTab]}
+                            style={[styles.tabButton, activeTab === "houseParty" && isDarkMode ? styles.lightactiveTab : styles.activeTab]}
                         >
-                            <Text style={[globalstyle.text_16_med_90, activeTab === "houseParty" && globalstyle.text_14_reg_white]}>House Party</Text>
+                            <Text style={[globalstyle.text_16_med_90, activeTab === "houseParty" && isDarkMode ? styles.lightactivetext : styles.activetext]}>House Party</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => setActiveTab("aroundMe")}
-                            style={[styles.tabButton, activeTab === "aroundMe" && styles.activeTab]}
+                            style={[styles.tabButton, activeTab === "aroundMe" && isDarkMode ? styles.lightactiveTab : styles.activeTab]}
                         >
-                            <Text style={[globalstyle.text_16_med_90, activeTab === "aroundMe" && globalstyle.text_14_reg_white]}>Around Me</Text>
+                            <Text style={[globalstyle.text_16_med_90, activeTab === "aroundMe" &&   isDarkMode ? styles.lightactivetext : styles.activetext]}>Around Me</Text>
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity onPress={() => setFilterVisible(true)}>
                         <View style={[globalstyle.border, { borderRadius: 50, width: 48, height: 48, justifyContent: 'center', alignItems: 'center' }]} >
-                            <Image source={require("../assets/icons/filter.png")} style={{ width: 20, height: 20 }} />
+                            <Image source={require("../assets/icons/filter.png")} style={{ width: 20, height: 20, tintColor: isDarkMode ? colors.white : colors.black }} />
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -148,7 +149,6 @@ const PartyScreen: React.FC = () => {
 
                     <View style={{ flexDirection: "column", gap: 32 }}>
                         <View>
-
                             {
                                 activeTab === "houseParty" &&
                                 < View style={styles.activehousetab} >
@@ -202,10 +202,10 @@ const styles = StyleSheet.create({
     tabContainer: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
     tabbox: { flexDirection: "row", marginBottom: 20, marginTop: 16, width: 'auto', borderRadius: 28, padding: 8, gap: 8 },
     tabButton: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, alignItems: "center" },
-    activeTab: { backgroundColor: color.charcol100 },
+    activeTab: { backgroundColor: colors.charcol100 },
     tabText: {
         fontSize: 16,
-        color: "black",
+        color: colors.black,
     },
     cardList: { gap: 16, flexGrow: 1 },
     activehousetab: {
@@ -213,6 +213,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 10,
         paddingBottom: 17.5
+    },
+    lightactiveTab: {
+        backgroundColor: colors.white,
+    },
+    lightactivetext: {
+        color: colors.black
+    },
+    activetext: {
+        color: colors.white
     }
 });
 

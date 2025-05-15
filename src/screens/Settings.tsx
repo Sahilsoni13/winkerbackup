@@ -1,5 +1,7 @@
 import CircularProgressAnimation from '@/component/animations/CircularProgressAnimation';
 import color, { globalstyle } from '@/styles/global';
+import { colors, getGlobalStyles } from '@/styles/globaltheme';
+import { useTheme } from '@/ThemeContext';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -10,8 +12,6 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
  */
 
 const Settings = () => {
-
-
 
     // navigation 
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
@@ -55,7 +55,8 @@ const Settings = () => {
         profileImage: require("../assets/images/userimage.png"),
         progress: 100,
     }
-
+    const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
     return (
         <View style={[styles.container, { backgroundColor: color.white }]}>
             {/* User Profile Section */}
@@ -79,7 +80,7 @@ const Settings = () => {
                     </View>
                 </View>
                 <Text style={[styles.profileName, globalstyle.text_18_reg_90]}>{userdata.name}</Text>
-                <TouchableOpacity style={styles.editProfileButton}>
+                <TouchableOpacity style={[styles.editProfileButton, { backgroundColor: isDarkMode ? colors.charcol40 : colors.charcol05 }]}>
                     <Text style={globalstyle.text_16_med_90}>Edit Profile</Text>
                 </TouchableOpacity>
             </View>
@@ -169,7 +170,6 @@ const styles = StyleSheet.create({
         marginTop: 14,
     },
     editProfileButton: {
-        backgroundColor: color.charcol05,
         paddingHorizontal: 16,
         paddingVertical: 8,
         borderRadius: 28,

@@ -2,6 +2,8 @@ import Button from '@/component/Button'
 import HeaderBack from '@/component/HeaderBack'
 import SecurityToggle from '@/component/SecurityToggle'
 import color, { globalstyle } from '@/styles/global'
+import { getGlobalStyles } from '@/styles/globaltheme'
+import { useTheme } from '@/ThemeContext'
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
@@ -11,7 +13,8 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
  * @returns {JSX.Element} The rendered PrivacySecurity component
  */
 const PrivacySecurity = () => {
-
+    const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
 
     return (
         <>
@@ -21,8 +24,20 @@ const PrivacySecurity = () => {
                     onRightPress={() => console.log("onRightPress")}
                 />
                 <View style={[style.securities]}>
-                    <SecurityToggle onPress={() => console.log("hello")} buttonText='View Blocked Users' description="Manage the list of people you've blocked." iconSource={require("@/assets/icons/blocked.png")} title='Blocked Users' />
-                    <SecurityToggle onPress={() => console.log("hello")} buttonText='Change Password' description="Change your current password." iconSource={require("@/assets/icons/privacy.png")} title='Password Management' />
+                    <SecurityToggle
+                        onPress={() => console.log("hello")}
+                        buttonText='View Blocked Users'
+                        description="Manage the list of people you've blocked."
+                        iconSource={require("@/assets/icons/blocked.png")}
+                        title='Blocked Users'
+                    />
+                    <SecurityToggle
+                        onPress={() => console.log("hello")}
+                        buttonText='Change Password'
+                        description="Change your current password."
+                        iconSource={require("@/assets/icons/privacy.png")}
+                        title='Password Management'
+                    />
                 </View>
                 <TouchableOpacity style={style.deleteButton}>
                     <Image style={style.deleteIcon} source={require('@/assets/icons/deleteicon.png')} />

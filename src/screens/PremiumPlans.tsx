@@ -3,6 +3,8 @@ import Button from "@/component/Button";
 import FeatureTable from "@/component/FeatureTable";
 import HeaderBack from "@/component/HeaderBack";
 import color, { globalstyle } from "@/styles/global";
+import { colors, getGlobalStyles } from "@/styles/globaltheme";
+import { useTheme } from "@/ThemeContext";
 import { Feature } from "@/types/type";
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
@@ -23,22 +25,32 @@ const PremiumPlans: React.FC = () => {
         { name: "Priority Support", free: "—", premium: true },
     ];
 
+    const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
 
     return (
-        <View style={[styles.container, { backgroundColor: color.white, flex: 1 }, globalstyle.container]}>
+        <View style={[{ flex: 1 }, globalstyle.container]}>
             <HeaderBack
                 title={"Premium Plans"}
                 onRightPress={() => console.log("onRightPress")}
             />
             <View style={styles.plansContainer}>
-                <View style={[styles.selectedPlanBox]}>
+                <View style={[styles.selectedPlanBox, {
+                    borderWidth: 1,
+                    borderColor: isDarkMode ? colors.charcol80 : colors.charcol10,
+                    backgroundColor: isDarkMode ? colors.charcol80 : colors.white
+                }]}>
                     <View style={{ padding: 12, backgroundColor: color.charcol05, borderRadius: 12 }}>
                         <Image style={{ width: 20, height: 20 }} source={require("../assets/icons/Ticket.png")} />
                     </View>
                     <Text style={[styles.CurrentPlan, globalstyle.text_14_bold_40]}>Current Plan</Text>
                     <Text style={[globalstyle.text_24_bold_90]}>Free</Text>
                 </View>
-                <View style={[styles.selectedPlanBoxPremium]}>
+                <View style={[styles.selectedPlanBoxPremium, {
+                    borderWidth: 1,
+                    borderColor: isDarkMode ? colors.charcol80 : colors.charcol10,
+                    backgroundColor: isDarkMode ? colors.charcol80 : colors.white
+                }]}>
                     <View style={{ padding: 12, backgroundColor: color.purple05, borderRadius: 12 }}>
                         <Image style={{ width: 20, height: 20 }} source={require("../assets/icons/premiumicon.png")} />
                     </View>
@@ -65,7 +77,6 @@ const PremiumPlans: React.FC = () => {
  * @type {Object}
  */
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: color.white },
     plansContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -74,9 +85,7 @@ const styles = StyleSheet.create({
         marginTop: 32
     },
     selectedPlanBox: {
-        backgroundColor: color.white,
-        borderWidth: 1,
-        borderColor: color.charcol10,
+
         borderStyle: "solid",
         padding: 16,
         borderRadius: 16,

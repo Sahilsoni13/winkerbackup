@@ -3,6 +3,8 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, ImageSourcePropType } 
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { GameCardProps } from '@/types/type';
 import color, { globalstyle } from '@/styles/global';
+import { colors, getGlobalStyles } from '@/styles/globaltheme';
+import { useTheme } from '@/ThemeContext';
 
 
 /**
@@ -19,11 +21,12 @@ import color, { globalstyle } from '@/styles/global';
 const GameCard: React.FC<GameCardProps> = ({ title, description, image, backgroundColor, screenName }) => {
     // Navigation object to handle screen transitions
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>(); // ✅ Hook inside component
-
+    const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
 
     return (
         <TouchableOpacity onPress={() => navigation.navigate(screenName as never)}>
-            <View style={[styles.card, globalstyle.border]}>
+            <View style={[styles.card, !isDarkMode && globalstyle.border, { backgroundColor: isDarkMode ? colors.charcol80 : colors.white }]}>
                 <View style={[styles.imagebox, { backgroundColor }]} >
                     <Image source={image} style={styles.cardImage} />
                 </View>

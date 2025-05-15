@@ -1,5 +1,6 @@
 import GameCard from '@/component/GameCard';
-import color, { globalstyle } from '@/styles/global';
+import color from '@/styles/global';
+import { getGlobalStyles } from '@/styles/globaltheme';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -15,8 +16,6 @@ const Games = () => {
         throwDart: require('../assets/images/ThrowDart.png'),
         spinTheWheel: require('../assets/images/SpintheWheel.png'),
     };
-
-    
 
 
     /** Data array defining the games to display */
@@ -44,6 +43,7 @@ const Games = () => {
         },
     ];
 
+    const globalstyle = getGlobalStyles();
     return (
         <View style={[styles.container, globalstyle.container]}>
             <ScrollView
@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: color.white
     },
     subtitle: {
         marginTop: 8,

@@ -5,7 +5,7 @@ import { View, StyleSheet, Animated, Dimensions, Text } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import color, { globalstyle } from '@/styles/global';
+import { colors, getGlobalStyles } from '@/styles/globaltheme';
 /**
  * A welcome animation component featuring a checkmark and confetti to celebrate profile setup
  * @returns {JSX.Element} The rendered WelComeAnimation component
@@ -68,6 +68,10 @@ const WelComeAnimation = () => {
             navigation.navigate("MainTab")
         }, 5000);
     }, [])
+
+
+    const globalstyle = getGlobalStyles();
+
     return (
         <>
             <View style={styles.container}>
@@ -78,7 +82,7 @@ const WelComeAnimation = () => {
                         cy={50}
                         r={45}
                         fill="none"
-                        stroke={color.purple}
+                        stroke={colors.purple}
                         strokeWidth={8}
                         strokeDasharray={283}
                         strokeDashoffset={circlePathLength}
@@ -87,7 +91,7 @@ const WelComeAnimation = () => {
                     <AnimatedSvgPath
                         d="M30 50 L45 65 L70 40"
                         fill="none"
-                        stroke={color.purple}
+                        stroke={colors.purple}
                         strokeWidth={8}
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -110,7 +114,7 @@ const WelComeAnimation = () => {
                     explosionSpeed={700}
                     autoStartDelay={0}
                     fadeOut={true}
-                    colors={[color.purple]}
+                    colors={[colors.purple]}
                 />
             )}
         </>

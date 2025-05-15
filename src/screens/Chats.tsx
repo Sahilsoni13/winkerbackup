@@ -12,7 +12,7 @@ import Input from '@/component/Input';
 import ChatCard from '@/component/ChatCard';
 import { ChatItem } from '@/types/type';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import color, { globalstyle } from '@/styles/global';
+import { colors, getGlobalStyles } from '@/styles/globaltheme';
 
 const { width } = Dimensions.get('window');
 const tabWidth = width * 0.29; // Dynamic tab width based on screen size
@@ -181,44 +181,44 @@ const Chats = () => {
             useNativeDriver: true,
         }).start();
     };
+    const globalstyle = getGlobalStyles();
 
-    
     return (
         <View style={[styles.container, globalstyle.container]}>
-                <View style={{ paddingTop: 16 }} >
-                    <Input
-                        placeholder="Search"
-                        rightIcon={require('../assets/icons/searchicon.png')}
-                        onChangeText={(text) => console.log(text)}
-                    />
-                </View>
+            <View style={{ paddingTop: 16 }} >
+                <Input
+                    placeholder="Search"
+                    rightIcon={require('../assets/icons/searchicon.png')}
+                    onChangeText={(text) => console.log(text)}
+                />
+            </View>
 
-                <View style={[styles.tabbox, globalstyle.border]}>
-                    <Animated.View
-                        style={[
-                            styles.activeTabBackground,
-                            { transform: [{ translateX }] },
-                        ]}
-                    />
-                    {tabs?.map((tab, index) => (
-                        <TouchableOpacity
-                            key={tab}
-                            onPress={() => handlePress(tab as 'All' | 'Direct' | 'Party', index)}
-                            style={styles.tabButton}
-                            activeOpacity={0.7}
+            <View style={[styles.tabbox, globalstyle.border]}>
+                <Animated.View
+                    style={[
+                        styles.activeTabBackground,
+                        { transform: [{ translateX }] },
+                    ]}
+                />
+                {tabs?.map((tab, index) => (
+                    <TouchableOpacity
+                        key={tab}
+                        onPress={() => handlePress(tab as 'All' | 'Direct' | 'Party', index)}
+                        style={styles.tabButton}
+                        activeOpacity={0.7}
+                    >
+                        <Text
+                            style={[
+                                globalstyle.text_16_med_90,
+                                activeTab === tab && styles.activeText,
+                            ]}
                         >
-                            <Text
-                                style={[
-                                    globalstyle.text_16_med_90,
-                                    activeTab === tab && styles.activeText,
-                                ]}
-                            >
-                                {tab}
-                            </Text>
-                        </TouchableOpacity>
-                    ))}
+                            {tab}
+                        </Text>
+                    </TouchableOpacity>
+                ))}
 
-                </View>
+            </View>
             <ScrollView showsVerticalScrollIndicator={false}>
                 {activeTab === "All" &&
                     <>
@@ -264,7 +264,6 @@ const Chats = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.white,
     },
     tabbox: {
         flexDirection: 'row',
@@ -291,14 +290,14 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: tabWidth - 18,
         height: '100%',
-        backgroundColor: color.charcol90,
+        backgroundColor: colors.charcol90,
         borderRadius: 20,
         left: 8,
         zIndex: 1,
         top: 8, right: -8,
     },
     activeText: {
-        color: color.white,
+        color: colors.white,
         fontWeight: '600',
     },
     chatListContainer: {

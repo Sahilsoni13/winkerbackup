@@ -11,6 +11,8 @@ import {
 import Dropdown from "./Dropdown";
 import { DropdownFeatureProps } from "@/types/type";
 import color, { globalstyle } from "@/styles/global";
+import { colors, getGlobalStyles } from "@/styles/globaltheme";
+import { useTheme } from "@/ThemeContext";
 
 /**
  * @function DropdownFeature
@@ -25,6 +27,8 @@ import color, { globalstyle } from "@/styles/global";
  */
 const DropdownFeature: React.FC<DropdownFeatureProps> = ({ iconSource, description, title, option, defaultvalue }) => {
 
+    const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
 
 
     /**
@@ -36,7 +40,7 @@ const DropdownFeature: React.FC<DropdownFeatureProps> = ({ iconSource, descripti
     };
     return (
         <View style={styles.container}>
-            <Image source={iconSource} style={styles.icon} />
+            <Image source={iconSource} style={[styles.icon, { tintColor: isDarkMode ? colors.white : colors.black }]} />
             <View style={styles.textContainer}>
                 <Text style={[globalstyle.text_16_bold_100]}>{title}</Text>
                 <Text style={[styles.description, globalstyle.text_14_reg_50]}>{description}</Text>
@@ -46,15 +50,14 @@ const DropdownFeature: React.FC<DropdownFeatureProps> = ({ iconSource, descripti
     );
 };
 
-
 /**
  * @constant {Object} styles - Defines the styles for the DropdownFeature component
  */
+
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         alignItems: "flex-start",
-        backgroundColor: "#FFFFFF",
         justifyContent: "flex-start",
         position: "relative",
         zIndex: 20

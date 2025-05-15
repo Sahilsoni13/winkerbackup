@@ -195,7 +195,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
             try {
                 const stored = await AsyncStorage.getItem("theme");
                 if (stored !== null) {
-                    setUserPreference(stored === "light");
+                    setUserPreference(stored === "dark");
                 } else {
                     setUserPreference(false); // Default to light mode if no saved preference
                 }
