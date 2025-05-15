@@ -28,7 +28,7 @@ const { isDarkMode } = useTheme();
       screenOptions={{
         contentStyle: { backgroundColor: isDarkMode ? color.charcol90 : color.white },
       }}
-      initialRouteName="MainTab"
+      initialRouteName="SplashScreen"
     >
       <Stack.Screen
         name="MainTab"
