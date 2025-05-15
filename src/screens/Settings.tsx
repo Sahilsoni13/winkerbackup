@@ -5,6 +5,7 @@ import { useTheme } from '@/ThemeContext';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { G } from 'react-native-svg';
 
 /**
  * @function Settings
@@ -58,7 +59,7 @@ const Settings = () => {
     const globalstyle = getGlobalStyles();
     const { isDarkMode } = useTheme();
     return (
-        <View style={[styles.container, { backgroundColor: color.white }]}>
+        <View style={[styles.container, globalstyle.container, {}]}>
             {/* User Profile Section */}
             <View style={styles.profileSection}>
                 <View style={styles.profileImageWrapper}>
@@ -80,7 +81,7 @@ const Settings = () => {
                     </View>
                 </View>
                 <Text style={[styles.profileName, globalstyle.text_18_reg_90]}>{userdata.name}</Text>
-                <TouchableOpacity style={[styles.editProfileButton, { backgroundColor: isDarkMode ? colors.charcol40 : colors.charcol05 }]}>
+                <TouchableOpacity style={[styles.editProfileButton, { backgroundColor: isDarkMode ? colors.charcol80 : colors.charcol05 }]}>
                     <Text style={globalstyle.text_16_med_90}>Edit Profile</Text>
                 </TouchableOpacity>
             </View>
@@ -96,10 +97,10 @@ const Settings = () => {
                                 styles.settingsItem,
                                 index === 0
                                     ? { backgroundColor: color.purple10, borderColor: color.purple10 }
-                                    : { backgroundColor: color.white, borderColor: color.charcol10 },
+                                    : { backgroundColor: isDarkMode?color.charcol80:color.white, borderColor: isDarkMode?color.charcol80:color.charcol10 },
                             ]}
                         >
-                            <Image style={{ width: 24, height: 24 }} source={item.Icon} />
+                            <Image style={{ width: 24, height: 24, tintColor: index === 0 ? color.purple50 : isDarkMode ?color.white:color.black }} source={item.Icon} />
                             <Text
                                 style={
                                     index === 0
@@ -117,7 +118,7 @@ const Settings = () => {
             <TouchableOpacity style={styles.logoutButton}>
                 <Text style={[styles.logoutText, globalstyle.text_14_bold_90]}>Logout</Text>
                 <Image
-                    style={{ width: 20, height: 20 }}
+                    style={{ width: 20, height: 20, tintColor: isDarkMode ? colors.white : colors.black }}
                     source={require("../assets/icons/logout.png")}
                 />
             </TouchableOpacity>

@@ -163,6 +163,7 @@
 // export default DateOfBirthInput;
 
 import color, { globalstyle } from '@/styles/global';
+import { colors } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
 import React, { useRef, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, NativeSyntheticEvent, TextInputKeyPressEventData, Keyboard } from 'react-native';
@@ -275,16 +276,16 @@ const DateOfBirthInput: React.FC = () => {
     };
 
     const { isDarkMode } = useTheme();
-    
+    const InputTextColor = isDarkMode ? colors.white : colors.charcol50
     return (
         <View>
             <Text style={[styles.label, globalstyle.text_16_reg_100]}>Date of Birth</Text>
             <View style={styles.dateContainer}>
                 <TextInput
                     ref={dayInputRef}
-                    style={[styles.input, globalstyle.border, { maxWidth: 66, borderColor: isValid.day ? '#E7E7E7' : 'red' }]}
+                    style={[styles.input, globalstyle.border, { maxWidth: 66, borderColor: isValid.day ? '#E7E7E7' : 'red', color: InputTextColor }]}
                     placeholder="Day"
-                    placeholderTextColor={isDarkMode}
+                    placeholderTextColor={InputTextColor}
                     value={date.day}
                     onChangeText={(value) => handleInputChange('day', value, monthInputRef)}
                     onKeyPress={(e) => handleKeyPress(e, 'day')}
@@ -293,9 +294,9 @@ const DateOfBirthInput: React.FC = () => {
                 />
                 <TextInput
                     ref={monthInputRef}
-                    style={[styles.input, globalstyle.border, { maxWidth: 85, borderColor: isValid.month ? '#E7E7E7' : 'red' }]}
+                    style={[styles.input, globalstyle.border, { maxWidth: 85, borderColor: isValid.month ? '#E7E7E7' : 'red', color: InputTextColor }]}
                     placeholder="Month"
-                    placeholderTextColor={isDarkMode}
+                    placeholderTextColor={InputTextColor}
                     value={date.month}
                     onChangeText={(value) => handleInputChange('month', value, yearInputRef)}
                     onKeyPress={(e) => handleKeyPress(e, 'month', dayInputRef)}
@@ -304,9 +305,9 @@ const DateOfBirthInput: React.FC = () => {
                 />
                 <TextInput
                     ref={yearInputRef}
-                    style={[styles.input, globalstyle.border, { maxWidth: 140, borderColor: isValid.year ? '#E7E7E7' : 'red' }]}
+                    style={[styles.input, globalstyle.border, { maxWidth: 140, borderColor: isValid.year ? '#E7E7E7' : 'red', color: InputTextColor }]}
                     placeholder="Year"
-                    placeholderTextColor={isDarkMode}
+                    placeholderTextColor={InputTextColor}
                     value={date.year}
                     onChangeText={(value) => handleInputChange('year', value)}
                     onKeyPress={(e) => handleKeyPress(e, 'year', monthInputRef)}

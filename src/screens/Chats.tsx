@@ -13,6 +13,7 @@ import ChatCard from '@/component/ChatCard';
 import { ChatItem } from '@/types/type';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
+import { useTheme } from '@/ThemeContext';
 
 const { width } = Dimensions.get('window');
 const tabWidth = width * 0.29; // Dynamic tab width based on screen size
@@ -182,7 +183,7 @@ const Chats = () => {
         }).start();
     };
     const globalstyle = getGlobalStyles();
-
+    const { isDarkMode } = useTheme();
     return (
         <View style={[styles.container, globalstyle.container]}>
             <View style={{ paddingTop: 16 }} >
@@ -193,11 +194,11 @@ const Chats = () => {
                 />
             </View>
 
-            <View style={[styles.tabbox, globalstyle.border]}>
+            <View style={[styles.tabbox, globalstyle.border, { backgroundColor: isDarkMode ? colors.charcol90 : "#EAEAEA" }]}>
                 <Animated.View
                     style={[
                         styles.activeTabBackground,
-                        { transform: [{ translateX }] },
+                        { transform: [{ translateX }],backgroundColor:isDarkMode?colors.white:colors.charcol90 },
                     ]}
                 />
                 {tabs?.map((tab, index) => (
@@ -210,7 +211,7 @@ const Chats = () => {
                         <Text
                             style={[
                                 globalstyle.text_16_med_90,
-                                activeTab === tab && styles.activeText,
+                                activeTab === tab && {color:isDarkMode?colors.black:colors.white},
                             ]}
                         >
                             {tab}
@@ -271,7 +272,7 @@ const styles = StyleSheet.create({
         width: tabWidth * tabs.length,
         borderRadius: 28,
         padding: 8,
-        backgroundColor: '#EAEAEA',
+        // backgroundColor: '#EAEAEA',
         position: 'relative',
         overflow: 'hidden',
         gap: 16
@@ -290,7 +291,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: tabWidth - 18,
         height: '100%',
-        backgroundColor: colors.charcol90,
+        // backgroundColor: colors.charcol90,
         borderRadius: 20,
         left: 8,
         zIndex: 1,
@@ -298,7 +299,6 @@ const styles = StyleSheet.create({
     },
     activeText: {
         color: colors.white,
-        fontWeight: '600',
     },
     chatListContainer: {
         flex: 1,

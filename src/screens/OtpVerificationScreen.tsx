@@ -244,6 +244,8 @@ import HeaderBack from "@/component/HeaderBack";
 import Button from "@/component/Button";
 import { OtpInput } from "react-native-otp-entry";
 import color, { globalstyle } from "@/styles/global";
+import { colors, getGlobalStyles } from "@/styles/globaltheme";
+import { useTheme } from "@/ThemeContext";
 
 /**
  * Component for OTP verification with input handling and navigation
@@ -307,7 +309,8 @@ const OtpVerificationScreen = () => {
       Alert.alert("Invalid OTP", "Please enter all 4 digits.");
     }
   };
-
+  const globalstyle = getGlobalStyles();
+  const { isDarkMode } = useTheme();
 
   return (
     <KeyboardAvoidingView
@@ -341,7 +344,7 @@ const OtpVerificationScreen = () => {
                     >
                       <Text style={globalstyle.text_16_reg_100}>demo@gmail.com </Text>
                       <Image
-                        style={{ width: 20, height: 20 }}
+                        style={{ width: 20, height: 20,tintColor: isDarkMode ? colors.white : colors.black }}
                         source={require("../assets/icons/editmail.png")}
                       />
                     </View>

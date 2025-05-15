@@ -78,6 +78,8 @@
 // export default SafeAreaWrapper;
 
 import color from "@/styles/global";
+import { colors, getGlobalStyles } from "@/styles/globaltheme";
+import { useTheme } from "@/ThemeContext";
 import React from "react";
 import {
     View,
@@ -99,23 +101,21 @@ interface SafeAreaWrapperProps extends ViewProps {
 
 const SafeAreaWrapper: React.FC<SafeAreaWrapperProps> = ({
     children,
-    statusBarColor = color.white, // Default purple
-    bottomInsetColor = color.charcol100, // Default black
+    // statusBarColor = color.white, 
+    bottomInsetColor = color.charcol100,
     style,
     ...props
 }) => {
     const insets = useSafeAreaInsets();
-    console.log("Insets:", insets); // Debugging: Check inset values
-
-    // Fallback height if insets.top is 0 (e.g., on some devices or in simulator)
+    const { isDarkMode } = useTheme();
+    const statusBarColor = isDarkMode ? colors.charcol100 : colors.white
     const statusBarHeight = insets.top > 0 ? insets.top : Platform.OS === "ios" ? 44 : 24;
 
-    
     return (
         <>
             <StatusBar
                 backgroundColor={statusBarColor}
-                barStyle="dark-content" // White icons/text for dark background
+                barStyle={isDarkMode?"light-content":"dark-content"} // White icons/text for dark background
                 translucent={false} // Force non-translucent status bar
             />
             {/* Top inset background with fallback height */}

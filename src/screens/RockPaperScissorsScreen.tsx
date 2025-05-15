@@ -200,7 +200,7 @@ const RockPaperScissorsScreen: React.FC = () => {
                             key={move}
                             style={[
                                 styles.moveButton,
-                                userMove === move && styles.selectedButton,
+                                userMove === move && {backgroundColor:isDarkMode?colors.white:colors.charcol100},
                                 gameState === 'waiting' && styles.disabledButton,
                             ]}
                             onPress={() => handleMoveSelection(move)}
@@ -209,7 +209,7 @@ const RockPaperScissorsScreen: React.FC = () => {
                             <Text
                                 style={[
                                     globalstyle.text_16_med_90,
-                                    userMove === move && globalstyle.text_14_reg_white,
+                                    userMove === move && {color:isDarkMode?color.black:color.white},
                                 ]}
                             >
                                 {move}

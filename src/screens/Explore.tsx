@@ -10,6 +10,7 @@ import { AroundMeCardProps, HousePartyCardProps } from "@/types/type";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, FlatList } from "react-native";
+import color from "./import { StyleSheet } from 'react-native";
 
 
 /**
@@ -117,15 +118,15 @@ const PartyScreen: React.FC = () => {
                     <View style={[styles.tabbox, globalstyle.border]} >
                         <TouchableOpacity
                             onPress={() => setActiveTab("houseParty")}
-                            style={[styles.tabButton, activeTab === "houseParty" && isDarkMode ? styles.lightactiveTab : styles.activeTab]}
+                            style={[styles.tabButton, activeTab === "houseParty" && { backgroundColor: isDarkMode ? color.white : color.charcol100 }]}
                         >
-                            <Text style={[globalstyle.text_16_med_90, activeTab === "houseParty" && isDarkMode ? styles.lightactivetext : styles.activetext]}>House Party</Text>
+                            <Text style={[globalstyle.text_16_med_90, activeTab === "houseParty" && {color:isDarkMode?color.black:color.white}]}>House Party</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => setActiveTab("aroundMe")}
-                            style={[styles.tabButton, activeTab === "aroundMe" && isDarkMode ? styles.lightactiveTab : styles.activeTab]}
+                            style={[styles.tabButton, activeTab === "aroundMe" && { backgroundColor: isDarkMode ? color.white : color.charcol100 }]}
                         >
-                            <Text style={[globalstyle.text_16_med_90, activeTab === "aroundMe" &&   isDarkMode ? styles.lightactivetext : styles.activetext]}>Around Me</Text>
+                            <Text style={[globalstyle.text_16_med_90, activeTab === "aroundMe"&& {color:isDarkMode?color.black:color.white}]}>Around Me</Text>
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity onPress={() => setFilterVisible(true)}>

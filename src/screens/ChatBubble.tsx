@@ -1,6 +1,8 @@
 import ChatHeader from "@/component/ChatHeader";
 import HeaderBack from "@/component/HeaderBack";
 import color, { globalstyle } from "@/styles/global";
+import { colors, getGlobalStyles } from "@/styles/globaltheme";
+import { useTheme } from "@/ThemeContext";
 import { ChatBubbleProps, Message } from "@/types/type";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useRef, useEffect } from "react";
@@ -204,7 +206,8 @@ const ChatScreen = () => {
 
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
-
+ const globalstyle = getGlobalStyles();
+const { isDarkMode } = useTheme();
 
   return (
     <KeyboardAvoidingView
@@ -214,6 +217,7 @@ const ChatScreen = () => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={[{
+          backgroundColor:isDarkMode ? colors.charcol100 : colors.white,
           flexGrow: 1,
           paddingBottom: keyboardHeight > 0 ? (isInputFocused ? 45 : 0) : (isInputFocused ? insets.bottom + 30 : 0), paddingHorizontal: 20
         }]}>

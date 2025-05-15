@@ -171,6 +171,8 @@ import Button from "@/component/Button";
 import { forgotPasswordSchema } from "@/validations/forgotValidation";
 import { SafeAreaView } from "react-native-safe-area-context";
 import color, { globalstyle } from "@/styles/global";
+import { getGlobalStyles } from "@/styles/globaltheme";
+import { useTheme } from "@/ThemeContext";
 
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
@@ -210,7 +212,8 @@ const ForgotPassword = () => {
         navigation.navigate("OtpVerificationScreen");
     };
 
-    
+    const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
 
 
     return (
@@ -220,49 +223,49 @@ const ForgotPassword = () => {
             style={{ flex: 1 }}
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={[styles.container, globalstyle.container]}>
-                <HeaderBack />
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={styles.scrollContent}
-                    keyboardShouldPersistTaps="handled"
-                >
-                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                        <View style={[{
-                            width: "100%", flexGrow: 1,
-                        }]}>
-                            <View style={[styles.innerContainer]}>
-                                <Image source={require("../assets/images/logo.png")} style={styles.logo} />
-                                <Text style={[styles.title, globalstyle.text_24_bold_90]}>Forgot Password</Text>
-                                <Text style={styles.subtitle}>Enter your email to receive a reset link</Text>
-                                <View style={styles.inputContainer}>
-                                    <Controller
-                                        control={control}
-                                        name="email"
-                                        render={({ field: { onChange, value } }) => (
-                                            <Input
-                                                label="Email"
-                                                placeholder="Enter your email"
-                                                leftIcon={require("../assets/icons/email.png")}
-                                                value={value}
-                                                onChangeText={onChange}
-                                                error={errors.email?.message}
-                                            />
-                                        )}
+                <View style={[styles.container, globalstyle.container]}>
+                    <HeaderBack />
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={styles.scrollContent}
+                        keyboardShouldPersistTaps="handled"
+                    >
+                        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                            <View style={[{
+                                width: "100%", flexGrow: 1,
+                            }]}>
+                                <View style={[styles.innerContainer]}>
+                                    <Image source={require("../assets/images/logo.png")} style={styles.logo} />
+                                    <Text style={[styles.title, globalstyle.text_24_bold_90]}>Forgot Password</Text>
+                                    <Text style={styles.subtitle}>Enter your email to receive a reset link</Text>
+                                    <View style={styles.inputContainer}>
+                                        <Controller
+                                            control={control}
+                                            name="email"
+                                            render={({ field: { onChange, value } }) => (
+                                                <Input
+                                                    label="Email"
+                                                    placeholder="Enter your email"
+                                                    leftIcon={require("../assets/icons/email.png")}
+                                                    value={value}
+                                                    onChangeText={onChange}
+                                                    error={errors.email?.message}
+                                                />
+                                            )}
+                                        />
+                                    </View>
+                                </View>
+                                <View style={styles.buttonContainer}>
+                                    <Button
+                                        variant="primary"
+                                        title="Send Link"
+                                        onPress={handleSubmit(onSubmit)}
                                     />
                                 </View>
                             </View>
-                            <View style={styles.buttonContainer}>
-                                <Button
-                                    variant="primary"
-                                    title="Send Link"
-                                    onPress={handleSubmit(onSubmit)}
-                                />
-                            </View>
-                        </View>
-                    </TouchableWithoutFeedback>
-                </ScrollView>
-            </View>
+                        </TouchableWithoutFeedback>
+                    </ScrollView>
+                </View>
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
     );
@@ -276,7 +279,7 @@ const styles = StyleSheet.create({
     scrollContent: {
         flexGrow: 1,
         alignItems: "center",
-        paddingBottom:20
+        paddingBottom: 20
     },
     innerContainer: {
         alignItems: "center",

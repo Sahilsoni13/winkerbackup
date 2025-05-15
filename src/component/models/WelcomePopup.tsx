@@ -11,6 +11,8 @@ import { PopupProps } from '@/types/type';
 import SuccessAnimation from '../SuccessAnimation';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { globalstyle } from '@/styles/global';
+import { getGlobalStyles } from '@/styles/globaltheme';
+import { useTheme } from '@/ThemeContext';
 
 
 /**
@@ -24,10 +26,12 @@ import { globalstyle } from '@/styles/global';
 
 const WelcomePopup: React.FC<PopupProps> = ({ visible, onClose, success, callback }) => {
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
+    const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
     return (
         <Modal transparent visible={visible} animationType="fade">
             <Pressable style={styles.overlay} onPress={onClose}>
-                <View style={styles.popup}>
+                <View style={[styles.popup,globalstyle.container]}>
                     <Text style={[styles.title, globalstyle.text_24_bold_90]}>🎉 Hurray! You're In!</Text>
                     <Text style={[styles.description, globalstyle.text_16_reg_50]}>
                         Welcome to the party! Start exploring, make connections, and let the fun begin.
@@ -63,7 +67,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     popup: {
-        backgroundColor: '#fff',
         padding: 24,
         paddingTop: 52,
         borderRadius: 10,
