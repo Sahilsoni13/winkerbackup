@@ -6,7 +6,7 @@ import { z } from "zod";
  * @property {string} email - User's email address
  * @property {string} password - User's password
  */
-type LoginFormData = z.infer<typeof loginSchema>;
+type LoginFormData = z.infer<typeof SignupSchema>;
 
 /**
  * Zod schema for validating login form data
@@ -15,12 +15,14 @@ type LoginFormData = z.infer<typeof loginSchema>;
 *   password: z.ZodString
 * }>}
 */
-export const loginSchema = z.object({
+export const SignupSchema = z.object({
     email: z.string()
         .nonempty("Email is required")
         .email("Please enter a valid email"),
-    password: z.string()
+    password: z
+        .string()
         .nonempty("Password is required")
-        .min(8, "Password must be at least 8 characters"),
+        .min(8, "Password must be at least 8 characters")
+        .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
 });
 

@@ -8,7 +8,6 @@ import GeneralSetting from '@/screens/GeneralSetting';
 import UserDetails from '@/screens/UserDetails';
 import RockPaperScissorsScreen from '@/screens/RockPaperScissorsScreen';
 import CreateAccount from '@/screens/CreateAccount';
-import LoginScreen from '@/screens/LoginScreen';
 import OtpVerificationScreen from '@/screens/OtpVerificationScreen';
 import ChatScreenchat from '@/screens/ChatBubble';
 import AccountSetupScreen from '@/screens/AccountSetupScreen';
@@ -18,17 +17,19 @@ import SplashScreen from '@/screens/SplashScreen';
 import ChatScreen from '@/screens/ChatScreen';
 import { useTheme } from '@/ThemeContext';
 import color from '@/styles/global';
+import SignupScreen from '@/screens/SignupScreen';
+import LoginScreen from '@/screens/LoginScreen';
 
 const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
-const { isDarkMode } = useTheme();
+  const { isDarkMode } = useTheme();
 
   return (
     <Stack.Navigator
       screenOptions={{
         contentStyle: { backgroundColor: isDarkMode ? color.charcol90 : color.white },
       }}
-      initialRouteName="LoginScreen"
+      initialRouteName="CreateAccount"
     >
       <Stack.Screen
         name="MainTab"
@@ -73,6 +74,11 @@ const { isDarkMode } = useTheme();
       <Stack.Screen
         name="CreateAccount"
         component={CreateAccount}
+        options={{ headerShown: false, animation: 'slide_from_right', animationDuration: 200 }}
+      />
+      <Stack.Screen
+        name="SignupScreen"
+        component={SignupScreen}
         options={{ headerShown: false, animation: 'slide_from_right', animationDuration: 200 }}
       />
       <Stack.Screen

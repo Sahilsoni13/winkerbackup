@@ -10,7 +10,7 @@ import { z } from "zod";
 *   confirmPassword: z.ZodString
 * }>}
 */
-export const signupSchema = z.object({
+export const createAcocuntSchema = z.object({
     email: z.string()
         .nonempty("Email is required")
         .email("Please enter a valid email"),
