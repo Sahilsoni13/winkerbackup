@@ -29,7 +29,7 @@ const AppNavigator = () => {
       screenOptions={{
         contentStyle: { backgroundColor: isDarkMode ? color.charcol90 : color.white },
       }}
-      initialRouteName="CreateAccount"
+      initialRouteName="SplashScreen"
     >
       <Stack.Screen
         name="MainTab"

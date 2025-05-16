@@ -73,8 +73,6 @@ const OnboardingAccounts = () => {
                     </Text>
                 </TouchableOpacity>
             </View>
-
-
         </View>
 
     );
