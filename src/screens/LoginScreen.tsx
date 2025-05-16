@@ -8,7 +8,7 @@ import {
     Text,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    Keyboard,       
+    Keyboard,
     View,
     Image,
 } from "react-native";
@@ -48,6 +48,32 @@ const LoginScreen = () => {
         },
     });
 
+
+
+    // Load remembered credentials
+    useEffect(() => {
+        const loadRememberedCredentials = async () => {
+            try {
+                const savedEmail = await AsyncStorage.getItem("rememberEmail");
+                const savedPassword = await AsyncStorage.getItem("rememberPassword");
+
+                if (savedEmail && savedPassword) {
+                    reset({
+                        email: savedEmail,
+                        password: savedPassword,
+                    });
+                    setAccepted(true);
+                }
+            } catch (e) {
+                console.error("Error loading remembered credentials", e);
+            }
+        };
+
+        loadRememberedCredentials();
+    }, []);
+
+
+
     // React Query mutation
     const SignupUser = async (data: LoginFormData) => {
         const response = await axios.post(`${API_BASE_URL}/auth/login`, {
@@ -82,6 +108,15 @@ const LoginScreen = () => {
                         await AsyncStorage.setItem('accessToken', accessToken);
                         await AsyncStorage.setItem('refreshToken', refreshToken);
                     }
+
+                    if (accepted) {
+                        await AsyncStorage.setItem("rememberEmail", variables.email);
+                        await AsyncStorage.setItem("rememberPassword", variables.password);
+                    } else {
+                        await AsyncStorage.removeItem("rememberEmail");
+                        await AsyncStorage.removeItem("rememberPassword");
+                    }
+
                 } catch (e) {
                     console.error("Error saving tokens to storage", e);
                 }
@@ -91,6 +126,7 @@ const LoginScreen = () => {
                     email: variables.email,
                     password: variables.password,
                 });
+                
             }
 
             reset();
