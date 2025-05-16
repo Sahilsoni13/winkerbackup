@@ -126,7 +126,7 @@ const LoginScreen = () => {
                     email: variables.email,
                     password: variables.password,
                 });
-                
+
             }
 
             reset();
