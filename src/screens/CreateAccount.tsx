@@ -21,13 +21,18 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signupSchema } from '@/validations/signupValidation';
+import { createAcocuntSchema } from '@/validations/createAcocuntSchema';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
 import DateOfBirthInput from '@/component/DateOfBirthInput';
 import { useApi } from '@/hook/useApi';
+import axios from 'axios';
+import { API_BASE_URL } from '@/apiInfo';
+import { useMutation } from '@tanstack/react-query';
+import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type SignupFormData = z.infer<typeof signupSchema>;
+type SignupFormData = z.infer<typeof createAcocuntSchema>;
 
 const genders = [
     { label: "Male", icon: require("../assets/icons/male.png") },
@@ -35,17 +40,18 @@ const genders = [
     { label: "Non Binary", icon: require("../assets/icons/nonbinary.png") },
 ];
 
-
 const CreateAccount = () => {
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
     const [keyboardOffset, setKeyboardOffset] = useState(0);
-
+    const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
     const {
         control,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm<SignupFormData>({
-        resolver: zodResolver(signupSchema),
+        resolver: zodResolver(createAcocuntSchema),
         defaultValues: {
             email: "",
             dob: { day: '', month: '', year: '' },
@@ -54,6 +60,47 @@ const CreateAccount = () => {
         },
     });
 
+    // React Query mutation
+    const SignupUser = async (data: SignupFormData) => {
+        const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
+        const response = await axios.post(`${API_BASE_URL}/users`, {
+            email: data.email,
+            dob: birthDate,
+            gender: data.gender,
+            aura: data.aura
+        });
+        return response.data;
+    };
+    const {
+        mutate: createuser,
+        isPending: loading,
+        error,
+    } = useMutation({
+        mutationFn: SignupUser,
+        onSuccess: async (response, variables) => {
+            console.log(variables)
+            const isSuccess = response?.success
+            Toast.show({
+                type: isSuccess ? 'success' : 'error',
+                text1: response?.message || (isSuccess ? "Signup successful" : "Something went wrong"),
+            });
+            if (isSuccess && response?.data) {
+                navigation.navigate("CreateAccount");
+            }
+            reset();
+        },
+        onError: (error: any) => {
+            console.log(error.stack)
+            Toast.show({
+                type: 'error',
+                text1: "Something went wrong",
+                text2: error?.response?.data?.message || "Unexpected error occurred",
+            });
+        },
+    });
+    const onSubmit = (data: SignupFormData) => {
+        createuser(data);
+    };
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => {
             setKeyboardOffset(Platform.OS === 'ios' ? event.endCoordinates.height + 20 : 40);
@@ -69,23 +116,22 @@ const CreateAccount = () => {
         };
     }, []);
 
-    const { request, loading, error } = useApi();
-    const onSubmit = async (data: SignupFormData) => {
-        const { email, gender, dob, aura } = data;
-        const birthDate = `${dob.year}-${dob.month.padStart(2, '0')}-${dob.day.padStart(2, '0')}`;
+    // const { request, loading, error } = useApi();
+    // const onSubmit = async (data: SignupFormData) => {
+    //     const { email, gender, dob, aura } = data;
+    //     const birthDate = `${dob.year}-${dob.month.padStart(2, '0')}-${dob.day.padStart(2, '0')}`;
 
-        const formattedData = {
-            email,
-            gender,
-            birthDate,
-            aura,
-        };
-        const response = await request("POST", "/users", formattedData);
-        console.log(response)
-    };
+    //     const formattedData = {
+    //         email,
+    //         gender,
+    //         birthDate,
+    //         aura,
+    //     };
+    //     const response = await request("POST", "/users", formattedData);
+    //     console.log(response)
+    // };
 
-    const globalstyle = getGlobalStyles();
-    const { isDarkMode } = useTheme();
+
     return (
         <KeyboardAvoidingView
             enabled

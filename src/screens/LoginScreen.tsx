@@ -65,9 +65,7 @@ const LoginScreen = () => {
         mutationFn: SignupUser,
         onSuccess: async (response, variables) => {
             console.log(response?.success, "response login screen");
-
             const isSuccess = response?.success
-
             // Show toast message
             Toast.show({
                 type: isSuccess ? 'success' : 'error',
