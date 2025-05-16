@@ -21,8 +21,7 @@ const AccountSetupStep1 = () => {
     return (
         <>
             <View style={styles.content}>
-                {/* date component */}
-                <DateOfBirthInput />
+                {/* <DateOfBirthInput /> */}
                 <Text style={[styles.label, globalstyle.text_16_reg_100]}>Gender</Text>
                 <View style={styles.genderContainer}>
                     <TouchableOpacity
@@ -83,13 +82,6 @@ const AccountSetupStep1 = () => {
                                 {
                                     width: 20,
                                     height: 20,
-                                    // tintColor: gender === 'Non Binary'
-                                    //     ? colors.white
-                                    //     : isDarkMode
-                                    //         ? colors.white
-                                    //         : colors.black,
-
-
                                 }]}
                             source={require("../../assets/icons/nonbinary.png")}
                         />

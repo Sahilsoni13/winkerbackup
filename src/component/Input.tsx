@@ -60,6 +60,7 @@ const Input: React.FC<CustomInputProps> = ({
                     keyboardType={type}
                     numberOfLines={1}
                     {...props}
+                    autoCapitalize='none'
                 />
 
                 {secureTextEntry ? (
