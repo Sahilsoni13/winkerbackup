@@ -4,6 +4,7 @@ import { useState } from 'react';
 import axios, { AxiosRequestConfig } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_BASE_URL } from '@/apiInfo';
+import Toast from 'react-native-toast-message';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -48,6 +49,11 @@ export const useApi = () => {
             });
             return res.data;
         } catch (err: any) {
+             Toast.show({
+                            type: 'error',
+                            text1: "Something went wrong",
+                            text2: error?.message || "Please try again later",
+                        });
             setError(err?.response?.data || err.message);
             return null;
         } finally {

@@ -26,11 +26,10 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { API_BASE_URL } from "@/apiInfo";
 import { SignupSchema } from "@/validations/SignupSchema";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-type LoginFormData = z.infer<typeof SignupSchema>;
+type SignupFormData = z.infer<typeof SignupSchema>;
 
-const LoginScreen = () => {
+const SignupScreen = () => {
     const [accepted, setAccepted] = useState(false);
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
     const [keyboardOffset, setKeyboardOffset] = useState(0);
@@ -40,7 +39,7 @@ const LoginScreen = () => {
         handleSubmit,
         formState: { errors },
         reset
-    } = useForm<LoginFormData>({
+    } = useForm<SignupFormData>({
         resolver: zodResolver(SignupSchema),
         defaultValues: {
             email: "",
@@ -49,8 +48,8 @@ const LoginScreen = () => {
     });
 
     // React Query mutation
-    const SignupUser = async (data: LoginFormData) => {
-        const response = await axios.post(`${API_BASE_URL}/auth/login`, {
+    const SignupUser = async (data: SignupFormData) => {
+        const response = await axios.post(`${API_BASE_URL}/auth/signup`, {
             email: data.email,
             password: data.password,
         });
@@ -58,57 +57,39 @@ const LoginScreen = () => {
     };
 
     const {
-        mutate: signin,
+        mutate: signup,
         isPending: loading,
         error,
     } = useMutation({
         mutationFn: SignupUser,
-        onSuccess: async (response, variables) => {
-            console.log(response?.success, "response login screen");
+        onSuccess: (response, variables) => {
+            const isSuccess = response?.statusCode === 201;
 
-            const isSuccess = response?.success
-
-            // Show toast message
             Toast.show({
                 type: isSuccess ? 'success' : 'error',
-                text1: response?.message || (isSuccess ? "Signup successful" : "Something went wrong"),
+                text1: response?.message || "Something went wrong",
             });
 
-            // Save tokens if success
-            if (isSuccess && response?.data) {
-                const { idToken, accessToken, refreshToken } = response.data;
-
-                try {
-                    if (idToken && accessToken && refreshToken) {
-                        await AsyncStorage.setItem('idToken', idToken);
-                        await AsyncStorage.setItem('accessToken', accessToken);
-                        await AsyncStorage.setItem('refreshToken', refreshToken);
-                    }
-                } catch (e) {
-                    console.error("Error saving tokens to storage", e);
-                }
-
-                // Navigate after token storage
-                navigation.navigate("CreateAccount", {
+            if (isSuccess) {
+                navigation.navigate("OtpVerificationScreen", {
                     email: variables.email,
                     password: variables.password,
                 });
             }
-
             reset();
+
         },
         onError: (error: any) => {
             Toast.show({
                 type: 'error',
                 text1: "Something went wrong",
-                text2: error?.response?.data?.message || "Unexpected error occurred",
+                text2: error?.response?.data?.message || error.message,
             });
         },
     });
 
-
-    const onSubmit = (data: LoginFormData) => {
-        signin(data);
+    const onSubmit = (data: SignupFormData) => {
+        signup(data);
     };
 
     useEffect(() => {
@@ -161,6 +142,7 @@ const LoginScreen = () => {
                                             />
                                         )}
                                     />
+
                                     <Controller
                                         control={control}
                                         name="password"
@@ -177,30 +159,20 @@ const LoginScreen = () => {
                                         )}
                                     />
                                 </View>
-                                <View style={styles.row}>
-                                    <TouchableOpacity onPress={() => setAccepted(!accepted)} style={styles.rememberme}>
-                                        <Checkbox bordercolor={colors.charcol20} checked={accepted} onPress={() => setAccepted(!accepted)} />
-                                        <Text style={[globalstyle.text_14_reg_40]}>Remember me</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
-                                        <Text style={globalstyle.text_14_reg_orange}>Forgot Password?</Text>
-                                    </TouchableOpacity>
-                                </View>
                                 <View style={styles.Signupbtn}>
                                     <Button
                                         variant="primary"
-                                        title={"Log in"}
+                                        title={"Signup"}
                                         onPress={handleSubmit(onSubmit)}
                                         isLoading={loading}
                                     />
                                 </View>
-
                                 <View style={styles.accountInfoContainer}>
                                     <Text style={[styles.accountinfotext, globalstyle.text_14_reg_40]}>
                                         Don't have an account?
                                     </Text>
-                                    <TouchableOpacity onPress={() => navigation.navigate("SignupScreen")}>
-                                        <Text style={[globalstyle.text_14_bold_pur50]}> Sign up</Text>
+                                    <TouchableOpacity onPress={() => navigation.navigate("LoginScreen")}>
+                                        <Text style={[globalstyle.text_14_bold_pur50]}> Log in</Text>
                                     </TouchableOpacity>
                                 </View>
                                 <View style={styles.containerline}>
@@ -229,7 +201,7 @@ const LoginScreen = () => {
     );
 };
 
-export default LoginScreen;
+export default SignupScreen;
 
 
 const styles = StyleSheet.create({
@@ -244,7 +216,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        alignItems: "center",
+        width: "100%"
     },
     contentWrapper: {
         width: "100%",
@@ -253,7 +225,9 @@ const styles = StyleSheet.create({
     inputcantiner: {
         flexDirection: 'column',
         width: "100%",
-        gap: "30"
+        flex: 1,
+        gap: "30",
+
     },
     logo: {
         width: 57,
@@ -264,17 +238,7 @@ const styles = StyleSheet.create({
     title: {
         marginBottom: 20,
     },
-    row: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        width: "100%",
-        marginTop: 16,
-    },
-    rememberme: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 8,
-    },
+   
     Signupbtn: {
         width: "100%",
         marginTop: 32,
