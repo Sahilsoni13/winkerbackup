@@ -16,7 +16,6 @@ import {
     View,
     Image,
     TextInput,
-    Alert,
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
@@ -25,7 +24,6 @@ import { createAcocuntSchema } from '@/validations/createAcocuntSchema';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
 import DateOfBirthInput from '@/component/DateOfBirthInput';
-import { useApi } from '@/hook/useApi';
 import axios from 'axios';
 import { API_BASE_URL } from '@/apiInfo';
 import { useMutation } from '@tanstack/react-query';
@@ -60,16 +58,44 @@ const CreateAccount = () => {
         },
     });
 
-    // React Query mutation
+    // // React Query mutation
+    // const SignupUser = async (data: SignupFormData) => {
+    //     const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
+    //     const token = await AsyncStorage.getItem('authToken');
+    //     const response = await axios.post(`${API_BASE_URL}/users`, {
+    //         email: data.email,
+    //         dob: birthDate,
+    //         gender: data.gender,
+    //         aura: data.aura
+    //     },
+    // );
+    //     return response.data;
+    // };
+
     const SignupUser = async (data: SignupFormData) => {
-        const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
-        const response = await axios.post(`${API_BASE_URL}/users`, {
-            email: data.email,
-            dob: birthDate,
-            gender: data.gender,
-            aura: data.aura
-        });
-        return response.data;
+        try {
+            const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
+            const token = await AsyncStorage.getItem('accessToken');
+            console.log(token, "token") 
+            const response = await axios.post(
+                `${API_BASE_URL}/users`,
+                {
+                    email: data.email,
+                    dob: birthDate,
+                    gender: data.gender,
+                    aura: data.aura,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                }
+            );
+            return response.data;
+        } catch (error: any) {
+            console.error('Signup error:', error?.response?.data || error.message);
+            throw error; // so React Query can handle it
+        }
     };
     const {
         mutate: createuser,
@@ -115,22 +141,6 @@ const CreateAccount = () => {
             keyboardDidHideListener.remove();
         };
     }, []);
-
-    // const { request, loading, error } = useApi();
-    // const onSubmit = async (data: SignupFormData) => {
-    //     const { email, gender, dob, aura } = data;
-    //     const birthDate = `${dob.year}-${dob.month.padStart(2, '0')}-${dob.day.padStart(2, '0')}`;
-
-    //     const formattedData = {
-    //         email,
-    //         gender,
-    //         birthDate,
-    //         aura,
-    //     };
-    //     const response = await request("POST", "/users", formattedData);
-    //     console.log(response)
-    // };
-
 
     return (
         <KeyboardAvoidingView
