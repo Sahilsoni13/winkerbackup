@@ -27,7 +27,6 @@ import { useMutation } from "@tanstack/react-query";
 import { API_BASE_URL } from "@/apiInfo";
 import { SignupSchema } from "@/validations/SignupSchema";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import { useDispatch } from "react-redux";
 import { setEmail } from "@/redux/profileSlice";
 
@@ -54,13 +53,11 @@ const LoginScreen = () => {
     const dispatch = useDispatch();
 
 
-    // Load remembered credentials
     useEffect(() => {
         const loadRememberedCredentials = async () => {
             try {
                 const savedEmail = await AsyncStorage.getItem("rememberEmail");
                 const savedPassword = await AsyncStorage.getItem("rememberPassword");
-
                 if (savedEmail && savedPassword) {
                     reset({
                         email: savedEmail,
@@ -72,13 +69,11 @@ const LoginScreen = () => {
                 console.error("Error loading remembered credentials", e);
             }
         };
-
         loadRememberedCredentials();
     }, []);
 
 
-
-    // React Query mutation
+    // React Query mutation                               
     const SignupUser = async (data: LoginFormData) => {
         const response = await axios.post(`${API_BASE_URL}/auth/login`, {
             email: data.email,
@@ -122,6 +117,8 @@ const LoginScreen = () => {
                     }
                     // ✅ Save email to Redux store
                     dispatch(setEmail(variables.email));
+
+                    
 
                 } catch (e) {
                     console.error("Error saving tokens to storage", e);
