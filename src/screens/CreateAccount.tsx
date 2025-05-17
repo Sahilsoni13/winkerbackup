@@ -29,6 +29,8 @@ import { API_BASE_URL } from '@/apiInfo';
 import { useMutation } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 type SignupFormData = z.infer<typeof createAcocuntSchema>;
 
@@ -58,6 +60,11 @@ const CreateAccount = () => {
         },
     });
 
+    const email = useSelector((state: RootState) => state.profile.email);
+
+    console.log(email, "email ++++++++++++++++++")
+
+
     // // React Query mutation
     // const SignupUser = async (data: SignupFormData) => {
     //     const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
@@ -76,7 +83,7 @@ const CreateAccount = () => {
         try {
             const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
             const token = await AsyncStorage.getItem('accessToken');
-            console.log(token, "token") 
+            console.log(token, "token")
             const response = await axios.post(
                 `${API_BASE_URL}/users`,
                 {
@@ -173,7 +180,7 @@ const CreateAccount = () => {
                                                 label="Email"
                                                 placeholder="Enter email"
                                                 leftIcon={require("../assets/icons/email.png")}
-                                                value={value}
+                                                value={email}
                                                 onChangeText={onChange}
                                                 error={errors.email?.message}
                                             />
