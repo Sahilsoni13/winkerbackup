@@ -262,9 +262,9 @@ import Toast from 'react-native-toast-message';
 type ProfileFormData = z.infer<typeof profileSchema>;
 
 const AccountSetupScreen = () => {
-  //  const route = useRoute<RouteProp<{ params: { email: string;  } }, "params">>();
-  //  const email  = route.params;
-
+   const route = useRoute<RouteProp<{ params: { email: string;  } }, "params">>();
+   const email  = route.params;
+console.log(email,"emailnow")
   const [step, setStep] = useState<number>(1);
   const totalSteps = 3;
   const totalDots = 2;
@@ -284,7 +284,6 @@ const AccountSetupScreen = () => {
       firstName: '',
       lastName: '',
       profilePictureUrl: '',
-      email: 'sonisahil1018@gmal.com',
     },
   });
 
@@ -292,13 +291,12 @@ const AccountSetupScreen = () => {
   const UserProfile = async (data: ProfileFormData) => {
     console.log(data)
     const token = await AsyncStorage.getItem('idToken');
-    const response = await axios.post(
-      `${API_BASE_URL}/users/profile/image-upload-url`,
+    const response = await axios.post(`${API_BASE_URL}/users/profile/image-upload-url`,
       {
         firstName: data.firstName,
         lastName: data.lastName,
         profilePictureUrl: data.profilePictureUrl,
-        email: data.email,
+        email: email,
       },
       {
         headers: {
@@ -306,7 +304,6 @@ const AccountSetupScreen = () => {
         },
       }
     );
-    console.log(response.data)
     return response.data ;
   };
 

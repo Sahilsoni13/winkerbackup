@@ -53,7 +53,6 @@ const CreateAccount = () => {
     } = useForm<SignupFormData>({
         resolver: zodResolver(createAcocuntSchema),
         defaultValues: {
-            email: "",
             dob: { day: '', month: '', year: '' },
             gender: "Male",
             aura: ""
@@ -61,40 +60,23 @@ const CreateAccount = () => {
     });
 
     const email = useSelector((state: RootState) => state.profile.email);
-
-    console.log(email, "email ++++++++++++++++++")
-
-
-    // // React Query mutation
-    // const SignupUser = async (data: SignupFormData) => {
-    //     const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
-    //     const token = await AsyncStorage.getItem('authToken');
-    //     const response = await axios.post(`${API_BASE_URL}/users`, {
-    //         email: data.email,
-    //         dob: birthDate,
-    //         gender: data.gender,
-    //         aura: data.aura
-    //     },
-    // );
-    //     return response.data;
-    // };
- 
- const SignupUser = async (data: SignupFormData) => {
+    console.log(email, "email")
+    const SignupUser = async (data: SignupFormData) => {
+        console.log(data);
         try {
             const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
             const token = await AsyncStorage.getItem('idToken');
-            console.log(birthDate)
             const response = await axios.post(
                 `${API_BASE_URL}/users`,
                 {
-                    email: data.email,
+                    email: email,
                     birthDate: birthDate,
                     gender: data.gender,
                     aura: data.aura,
                 },
                 {
                     headers: {
-                        Authorization: `${token}`,
+                        Authorization: token,
                     }
                 }
             );
@@ -107,7 +89,7 @@ const CreateAccount = () => {
     const {
         mutate: createuser,
         isPending: loading,
-        error, 
+        error,
     } = useMutation({
         mutationFn: SignupUser,
         onSuccess: async (response, variables) => {
@@ -119,7 +101,7 @@ const CreateAccount = () => {
             });
             if (isSuccess && response?.data) {
                 navigation.navigate("AccountSetupScreen", {
-                    email: variables.email,
+                    email: email,
                 });
             }
             reset();
@@ -174,20 +156,13 @@ const CreateAccount = () => {
                         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                             <View style={styles.innerContainer}>
                                 <View style={styles.inputscantiner}>
-                                    <Controller
-                                        control={control}
-                                        name="email"
-                                        render={({ field: { onChange, value } }) => (
                                             <Input
                                                 label="Email"
                                                 placeholder="Enter email"
                                                 leftIcon={require("../assets/icons/email.png")}
                                                 value={email}
-                                                onChangeText={onChange}
-                                                error={errors.email?.message}
+                                                editable={false}
                                             />
-                                        )}
-                                    />
                                     <Controller
                                         control={control}
                                         name="gender"

@@ -315,3 +315,14 @@ export interface ChatBubbleProps {
   time: string;
   onPress: () => void
 }
+
+
+
+
+export type RootParamList = {
+  AuthCheck: undefined;
+  Login: undefined;
+  Explore: undefined;
+  CreateAccount: { email: string; password: string };
+  // aur bhi jo screens hain wo add karo
+};
