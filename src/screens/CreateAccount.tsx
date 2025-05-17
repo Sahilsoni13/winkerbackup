@@ -53,7 +53,6 @@ const CreateAccount = () => {
     } = useForm<SignupFormData>({
         resolver: zodResolver(createAcocuntSchema),
         defaultValues: {
-            email: "",
             dob: { day: '', month: '', year: '' },
             gender: "Male",
             aura: ""
@@ -61,40 +60,23 @@ const CreateAccount = () => {
     });
 
     const email = useSelector((state: RootState) => state.profile.email);
-
-    console.log(email, "email ++++++++++++++++++")
-
-
-    // // React Query mutation
-    // const SignupUser = async (data: SignupFormData) => {
-    //     const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
-    //     const token = await AsyncStorage.getItem('authToken');
-    //     const response = await axios.post(`${API_BASE_URL}/users`, {
-    //         email: data.email,
-    //         dob: birthDate,
-    //         gender: data.gender,
-    //         aura: data.aura
-    //     },
-    // );
-    //     return response.data;
-    // };
-
+    console.log(email, "email")
     const SignupUser = async (data: SignupFormData) => {
+        console.log(data);
         try {
             const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
-            const token = await AsyncStorage.getItem('accessToken');
-            console.log(token, "token")
+            const token = await AsyncStorage.getItem('idToken');
             const response = await axios.post(
                 `${API_BASE_URL}/users`,
                 {
-                    email: data.email,
-                    dob: birthDate,
+                    email: email,
+                    birthDate: birthDate,
                     gender: data.gender,
                     aura: data.aura,
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: token,
                     }
                 }
             );
@@ -118,7 +100,9 @@ const CreateAccount = () => {
                 text1: response?.message || (isSuccess ? "Signup successful" : "Something went wrong"),
             });
             if (isSuccess && response?.data) {
-                navigation.navigate("CreateAccount");
+                navigation.navigate("AccountSetupScreen", {
+                    email: email,
+                });
             }
             reset();
         },
@@ -172,21 +156,13 @@ const CreateAccount = () => {
                         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                             <View style={styles.innerContainer}>
                                 <View style={styles.inputscantiner}>
-                                    <Controller
-                                        control={control}
-                                        name="email"
-                                        render={({ field: { onChange, value } }) => (
                                             <Input
                                                 label="Email"
                                                 placeholder="Enter email"
                                                 leftIcon={require("../assets/icons/email.png")}
                                                 value={email}
-                                                onChangeText={onChange}
-                                                error={errors.email?.message}
                                                 editable={false}
                                             />
-                                        )}
-                                    />
                                     <Controller
                                         control={control}
                                         name="gender"
@@ -291,6 +267,7 @@ const CreateAccount = () => {
                                     </View>
                                     <Button
                                         onPress={handleSubmit(onSubmit)}
+                                        // onPress={()=>navigation.navigate("AccountSetupScreen")}
                                         isLoading={loading}
                                         title="Create Account"
                                         variant="primary"

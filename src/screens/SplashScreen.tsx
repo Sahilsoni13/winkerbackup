@@ -28,12 +28,10 @@
 // export default SplashScreen
 
 
-import color from '@/styles/global';
 import { getGlobalStyles } from '@/styles/globaltheme';
-import { useTheme } from '@/ThemeContext';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
-import { Image, Text, View, ActivityIndicator } from 'react-native';
+import { Image,  View, } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SplashScreen = () => {
@@ -42,7 +40,7 @@ const SplashScreen = () => {
     useEffect(() => {
         const checkLoginStatus = async () => {
             try {
-                const token = await AsyncStorage.getItem('accessToken');
+                const token = await AsyncStorage.getItem('idToken');
 
                 if (token) {
                     // ✅ User is already logged in, navigate to Explore screen
@@ -88,7 +86,6 @@ const SplashScreen = () => {
                 source={require('../assets/icons/splashLogo.png')}
                 style={{ width: 120, height: 120, alignSelf: 'center' }}
             />
-            {/* <ActivityIndicator size="large" style={{ marginTop: 20 }} /> */}
         </View>
     );
 };

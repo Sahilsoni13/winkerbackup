@@ -31,7 +31,7 @@ const AppNavigator = () => {
       }}
       initialRouteName="LoginScreen"
     >
-      <Stack.Screen
+      <Stack.Screen 
         name="MainTab"
         component={BottomTabsNavigator}
         options={{ headerShown: false }}

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
+<<<<<<< HEAD
 import { PermissionsAndroid } from 'react-native';
 
+=======
+>>>>>>> fa660ca653c85f52cd63d0bbc6629e8ed5b0f547
 import {
     KeyboardAvoidingView,
     Platform,
@@ -30,7 +33,6 @@ import { useMutation } from "@tanstack/react-query";
 import { API_BASE_URL } from "@/apiInfo";
 import { SignupSchema } from "@/validations/SignupSchema";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import { useDispatch } from "react-redux";
 import { setEmail } from "@/redux/profileSlice";
 import Geolocation from 'react-native-geolocation-service';
@@ -93,13 +95,16 @@ const LoginScreen = () => {
 
     const dispatch = useDispatch();
 
+<<<<<<< HEAD
     // Load remembered credentials
+=======
+
+>>>>>>> fa660ca653c85f52cd63d0bbc6629e8ed5b0f547
     useEffect(() => {
         const loadRememberedCredentials = async () => {
             try {
                 const savedEmail = await AsyncStorage.getItem("rememberEmail");
                 const savedPassword = await AsyncStorage.getItem("rememberPassword");
-
                 if (savedEmail && savedPassword) {
                     reset({
                         email: savedEmail,
@@ -111,10 +116,13 @@ const LoginScreen = () => {
                 console.error("Error loading remembered credentials", e);
             }
         };
-
         loadRememberedCredentials();
     }, []);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> fa660ca653c85f52cd63d0bbc6629e8ed5b0f547
     // React Query mutation                               
     const SignupUser = async (data: LoginFormData) => {
         const response = await axios.post(`${API_BASE_URL}/auth/login`, {
