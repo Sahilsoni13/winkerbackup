@@ -29,6 +29,8 @@ import { API_BASE_URL } from '@/apiInfo';
 import { useMutation } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 type SignupFormData = z.infer<typeof createAcocuntSchema>;
 
@@ -58,7 +60,26 @@ const CreateAccount = () => {
         },
     });
 
-    const SignupUser = async (data: SignupFormData) => {
+    const email = useSelector((state: RootState) => state.profile.email);
+
+    console.log(email, "email ++++++++++++++++++")
+
+
+    // // React Query mutation
+    // const SignupUser = async (data: SignupFormData) => {
+    //     const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
+    //     const token = await AsyncStorage.getItem('authToken');
+    //     const response = await axios.post(`${API_BASE_URL}/users`, {
+    //         email: data.email,
+    //         dob: birthDate,
+    //         gender: data.gender,
+    //         aura: data.aura
+    //     },
+    // );
+    //     return response.data;
+    // };
+ 
+ const SignupUser = async (data: SignupFormData) => {
         try {
             const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
             const token = await AsyncStorage.getItem('idToken');
@@ -161,7 +182,7 @@ const CreateAccount = () => {
                                                 label="Email"
                                                 placeholder="Enter email"
                                                 leftIcon={require("../assets/icons/email.png")}
-                                                value={value}
+                                                value={email}
                                                 onChangeText={onChange}
                                                 error={errors.email?.message}
                                             />

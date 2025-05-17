@@ -28,6 +28,9 @@ import { API_BASE_URL } from "@/apiInfo";
 import { SignupSchema } from "@/validations/SignupSchema";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { useDispatch } from "react-redux";
+import { setEmail } from "@/redux/profileSlice";
+
 type LoginFormData = z.infer<typeof SignupSchema>;
 
 const LoginScreen = () => {
@@ -48,6 +51,7 @@ const LoginScreen = () => {
         },
     });
 
+    const dispatch = useDispatch();
 
 
     // Load remembered credentials
@@ -116,6 +120,8 @@ const LoginScreen = () => {
                         await AsyncStorage.removeItem("rememberEmail");
                         await AsyncStorage.removeItem("rememberPassword");
                     }
+                    // ✅ Save email to Redux store
+                    dispatch(setEmail(variables.email));
 
                 } catch (e) {
                     console.error("Error saving tokens to storage", e);
@@ -126,7 +132,6 @@ const LoginScreen = () => {
                     email: variables.email,
                     password: variables.password,
                 });
-
             }
 
             reset();

@@ -314,7 +314,7 @@ const AccountSetupScreen = () => {
     mutationFn: UserProfile,
     onSuccess: (response) => {
       const isSuccess = response?.success;
-      Toast.show({
+      Toast.show({ 
         type: isSuccess ? 'success' : 'error',
         text1: response?.message || (isSuccess ? 'Profile updated' : 'Something went wrong'),
       });
