@@ -183,6 +183,7 @@ const CreateAccount = () => {
                                                 value={email}
                                                 onChangeText={onChange}
                                                 error={errors.email?.message}
+                                                editable={false}
                                             />
                                         )}
                                     />
