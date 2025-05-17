@@ -58,36 +58,22 @@ const CreateAccount = () => {
         },
     });
 
-    // // React Query mutation
-    // const SignupUser = async (data: SignupFormData) => {
-    //     const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
-    //     const token = await AsyncStorage.getItem('authToken');
-    //     const response = await axios.post(`${API_BASE_URL}/users`, {
-    //         email: data.email,
-    //         dob: birthDate,
-    //         gender: data.gender,
-    //         aura: data.aura
-    //     },
-    // );
-    //     return response.data;
-    // };
-
     const SignupUser = async (data: SignupFormData) => {
         try {
             const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
-            const token = await AsyncStorage.getItem('accessToken');
-            console.log(token, "token") 
+            const token = await AsyncStorage.getItem('idToken');
+            console.log(birthDate)
             const response = await axios.post(
                 `${API_BASE_URL}/users`,
                 {
                     email: data.email,
-                    dob: birthDate,
+                    birthDate: birthDate,
                     gender: data.gender,
                     aura: data.aura,
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `${token}`,
                     }
                 }
             );
@@ -100,7 +86,7 @@ const CreateAccount = () => {
     const {
         mutate: createuser,
         isPending: loading,
-        error,
+        error, 
     } = useMutation({
         mutationFn: SignupUser,
         onSuccess: async (response, variables) => {
@@ -111,7 +97,9 @@ const CreateAccount = () => {
                 text1: response?.message || (isSuccess ? "Signup successful" : "Something went wrong"),
             });
             if (isSuccess && response?.data) {
-                navigation.navigate("CreateAccount");
+                navigation.navigate("AccountSetupScreen", {
+                    email: variables.email,
+                });
             }
             reset();
         },
@@ -283,6 +271,7 @@ const CreateAccount = () => {
                                     </View>
                                     <Button
                                         onPress={handleSubmit(onSubmit)}
+                                        // onPress={()=>navigation.navigate("AccountSetupScreen")}
                                         isLoading={loading}
                                         title="Create Account"
                                         variant="primary"

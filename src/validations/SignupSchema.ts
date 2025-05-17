@@ -6,7 +6,6 @@ import { z } from "zod";
  * @property {string} email - User's email address
  * @property {string} password - User's password
  */
-type LoginFormData = z.infer<typeof SignupSchema>;
 
 /**
  * Zod schema for validating login form data
