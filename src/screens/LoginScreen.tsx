@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 import { PermissionsAndroid } from 'react-native';
 
-
 import {
     KeyboardAvoidingView,
     Platform,
@@ -15,6 +14,7 @@ import {
     View,
     Image,
 } from "react-native";
+
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import Input from "@/component/Input";
 import HeaderBack from "@/component/HeaderBack";
@@ -33,6 +33,43 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useDispatch } from "react-redux";
 import { setEmail } from "@/redux/profileSlice";
+import Geolocation from 'react-native-geolocation-service';
+
+const requestLocationPermission = async () => {
+    if (Platform.OS === 'android') {
+        const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+        );
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+    }
+    return true;
+};
+
+const getUserLocation = (): Promise<{ latitude: number; longitude: number }> => {
+    return new Promise((resolve, reject) => {
+        Geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                resolve({ latitude, longitude });
+            },
+            (error) => reject(error),
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        );
+    });
+};
+
+const sendLocationToBackend = async (latitude: number, longitude: number, idToken: string) => {
+    await axios.put(
+        `${API_BASE_URL}/users/location`,
+        { latitude, longitude },
+        {
+            headers: {
+                Authorization: idToken,
+                'Content-Type': 'application/json',
+            },
+        }
+    );
+};
 
 type LoginFormData = z.infer<typeof SignupSchema>;
 
@@ -56,7 +93,6 @@ const LoginScreen = () => {
 
     const dispatch = useDispatch();
 
-
     // Load remembered credentials
     useEffect(() => {
         const loadRememberedCredentials = async () => {
@@ -78,8 +114,6 @@ const LoginScreen = () => {
 
         loadRememberedCredentials();
     }, []);
-
-
 
     // React Query mutation                               
     const SignupUser = async (data: LoginFormData) => {
@@ -123,10 +157,21 @@ const LoginScreen = () => {
                         await AsyncStorage.removeItem("rememberEmail");
                         await AsyncStorage.removeItem("rememberPassword");
                     }
+
                     // ✅ Save email to Redux store
                     dispatch(setEmail(variables.email));
 
-                    
+                    try {
+                        const permissionGranted = await requestLocationPermission();
+                        if (!permissionGranted) {
+                            console.log("Location permission denied");
+                        } else {
+                            const { latitude, longitude } = await getUserLocation();
+                            await sendLocationToBackend(latitude, longitude, idToken);
+                        }
+                    } catch (error) {
+                        console.error("Error getting/sending location:", error);
+                    }
 
                 } catch (e) {
                     console.error("Error saving tokens to storage", e);
@@ -149,7 +194,6 @@ const LoginScreen = () => {
             });
         },
     });
-
 
     const onSubmit = (data: LoginFormData) => {
         signin(data);
@@ -274,7 +318,6 @@ const LoginScreen = () => {
 };
 
 export default LoginScreen;
-
 
 const styles = StyleSheet.create({
     keyboardAvoidingView: {
