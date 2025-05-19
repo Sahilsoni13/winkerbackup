@@ -133,6 +133,7 @@ const LoginScreen = () => {
         onSuccess: async (response, variables) => {
             console.log(response?.success, "response login screen");
             const isSuccess = response?.success
+            console.log(response,"response")
             // Show toast message
             Toast.show({
                 type: isSuccess ? 'success' : 'error',

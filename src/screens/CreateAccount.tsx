@@ -95,9 +95,10 @@ const CreateAccount = () => {
         onSuccess: async (response, variables) => {
             console.log(variables)
             const isSuccess = response?.success
+            console.log(response,"response")
             Toast.show({
                 type: isSuccess ? 'success' : 'error',
-                text1: response?.message || (isSuccess ? "Signup successful" : "Something went wrong"),
+                text1: response?.data.message || (isSuccess ? "Signup successful" : "Something went wrong"),
             });
             if (isSuccess && response?.data) {
                 navigation.navigate("AccountSetupScreen", {

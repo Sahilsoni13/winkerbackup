@@ -58,6 +58,18 @@ const Settings = () => {
     }
     const globalstyle = getGlobalStyles();
     const { isDarkMode } = useTheme();
+    //     const user = async () => {
+    //     const token = await AsyncStorage.getItem('idToken');
+    //     const data = axios.get(`${API_BASE_URL}/users/profile`, {
+    //         headers: {
+    //             Authorization: token
+    //         }
+    //     }).then(res => {
+    //         console.log(res)
+    //     })
+    //     console.log(data, "data")
+    // }
+    // user()
     return (
         <View style={[styles.container, globalstyle.container, {}]}>
             {/* User Profile Section */}
