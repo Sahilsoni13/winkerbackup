@@ -1,6 +1,6 @@
 
 
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import {
     View,
     Text,
@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import Dropdown from "./Dropdown";
 import { DropdownFeatureProps } from "@/types/type";
-import color, { globalstyle } from "@/styles/global";
 import { colors, getGlobalStyles } from "@/styles/globaltheme";
 import { useTheme } from "@/ThemeContext";
 
@@ -79,12 +78,12 @@ const styles = StyleSheet.create({
         width: 40,
         height: 20,
         borderRadius: 20,
-        backgroundColor: color.charcol30,
+        backgroundColor: colors.charcol30,
         justifyContent: "center",
         padding: 2,
     },
     toggleContainerActive: {
-        backgroundColor: color.charcol90,
+        backgroundColor: colors.charcol90,
     },
     toggleThumb: {
         width: 16,

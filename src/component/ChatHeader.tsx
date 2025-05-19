@@ -1,4 +1,3 @@
-import color from '@/styles/global';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
 import { ChatHeaderProps } from '@/types/type';

@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, ImageSourcePropType } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { GameCardProps } from '@/types/type';
-import color, { globalstyle } from '@/styles/global';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
 
@@ -66,7 +65,7 @@ const styles = StyleSheet.create({
     },
     cardDescription: {
         fontSize: 14,
-        color: color.charcol40,
+        color: colors.charcol40,
         fontFamily: "Inter_18pt-Regular"
     },
     imagebox: {

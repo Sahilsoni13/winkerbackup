@@ -1,5 +1,4 @@
 // import ChatHeader from '@/component/ChatHeader';
-// import color from '@/styles/global';
 // import React, { useState, useCallback, useEffect } from 'react';
 // import {
 //     View,

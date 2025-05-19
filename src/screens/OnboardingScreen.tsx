@@ -2,12 +2,10 @@ import BreakTheIce from "@/component/onboardingSetupscreen/BreakTheIce";
 import ConnectNearby from "@/component/onboardingSetupscreen/ConnectNearby";
 import KeepItSocial from "@/component/onboardingSetupscreen/KeepItSocial";
 import OnboardingAccounts from "@/component/onboardingSetupscreen/OnboardingAccounts";
-import color from "@/styles/global";
+import { colors } from "@/styles/globaltheme";
 import React, { useState } from "react";
 import {
-    StyleSheet,
     SafeAreaView,
-    useColorScheme,
 } from "react-native";
 
 /**
@@ -48,7 +46,7 @@ const OnboardingScreen: React.FC = () => {
         }
     };
 
-    return <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>{renderStep()}</SafeAreaView>;
+    return <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>{renderStep()}</SafeAreaView>;
 };
 
 export default OnboardingScreen;

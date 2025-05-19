@@ -1,4 +1,5 @@
-import color, { globalstyle } from "@/styles/global";
+import { globalstyle } from "@/styles/global";
+import { colors } from "@/styles/globaltheme";
 import { DropdownProps } from "@/types/type";
 import React, { useRef, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image, Animated } from "react-native";
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         borderWidth: 1,
-        borderColor: color.charcol30,
+        borderColor: colors.charcol30,
         borderRadius: 8,
         paddingVertical: 4,
         paddingHorizontal: 8,

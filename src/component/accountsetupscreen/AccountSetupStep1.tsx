@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import DateOfBirthInput from '../DateOfBirthInput';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
-import color from '@/styles/global';
 
 /**
  * Component for the first step of account setup, handling date of birth and gender selection
@@ -25,7 +23,7 @@ const AccountSetupStep1 = () => {
                 <Text style={[styles.label, globalstyle.text_16_reg_100]}>Gender</Text>
                 <View style={styles.genderContainer}>
                     <TouchableOpacity
-                        style={[styles.genderButton, gender === 'Male' ? isDarkMode ? { backgroundColor: colors.white, borderColor: colors.white } : { backgroundColor: colors.black, borderColor: colors.white } : isDarkMode ? { backgroundColor: color.charcol90, borderColor: colors.white } : { backgroundColor: colors.charcol05, borderColor: "transparent" }]}
+                        style={[styles.genderButton, gender === 'Male' ? isDarkMode ? { backgroundColor: colors.white, borderColor: colors.white } : { backgroundColor: colors.black, borderColor: colors.white } : isDarkMode ? { backgroundColor: colors.charcol90, borderColor: colors.white } : { backgroundColor: colors.charcol05, borderColor: "transparent" }]}
                         onPress={() => setGender('Male')}
                     >
                         <Image
@@ -48,7 +46,7 @@ const AccountSetupStep1 = () => {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={[styles.genderButton, gender === 'Female' ? isDarkMode ? { backgroundColor: colors.white, borderColor: colors.white } : { backgroundColor: colors.black, borderColor: colors.white } : isDarkMode ? { backgroundColor: color.charcol90, borderColor: colors.white } : { backgroundColor: colors.charcol05, borderColor: "transparent" }]}
+                        style={[styles.genderButton, gender === 'Female' ? isDarkMode ? { backgroundColor: colors.white, borderColor: colors.white } : { backgroundColor: colors.black, borderColor: colors.white } : isDarkMode ? { backgroundColor: colors.charcol90, borderColor: colors.white } : { backgroundColor: colors.charcol05, borderColor: "transparent" }]}
                         onPress={() => setGender('Female')}
                     >
                         <Image
@@ -73,7 +71,7 @@ const AccountSetupStep1 = () => {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={[styles.genderButton, gender === 'Non Binary' ? isDarkMode ? { backgroundColor: colors.white, borderColor: colors.white } : { backgroundColor: colors.black, borderColor: colors.white } : isDarkMode ? { backgroundColor: color.charcol90, borderColor: colors.white } : { backgroundColor: colors.charcol05, borderColor: "transparent" }]}
+                        style={[styles.genderButton, gender === 'Non Binary' ? isDarkMode ? { backgroundColor: colors.white, borderColor: colors.white } : { backgroundColor: colors.black, borderColor: colors.white } : isDarkMode ? { backgroundColor: colors.charcol90, borderColor: colors.white } : { backgroundColor: colors.charcol05, borderColor: "transparent" }]}
                         onPress={() => setGender('Non Binary')}
                     >
                         <Image

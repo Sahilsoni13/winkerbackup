@@ -9,8 +9,7 @@ import {
     ActivityIndicator,
 } from "react-native";
 import { ButtonProps } from "@/types/type";
-import color from "@/styles/global";
-import { getGlobalStyles } from "@/styles/globaltheme";
+import { colors, getGlobalStyles } from "@/styles/globaltheme";
 
 /**
  * A customizable button component with support for variants, icons, and press states
@@ -149,11 +148,11 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
     },
     pressedButton: {
-        backgroundColor: color.purple10, // 🔹 Light Purple shade for pressed state
-        color: color.black
+        backgroundColor: colors.purple10, // 🔹 Light Purple shade for pressed state
+        color: colors.black
     },
     pressedText: {
-        color: color.purple50, // 🔹 Purple text color on Pressed State
+        color: colors.purple50, // 🔹 Purple text color on Pressed State
     },
 });
 
@@ -166,8 +165,8 @@ const variantStyles = {
         backgroundColor: "#934DFF", // Original purple button
     },
     outlined: {
-        backgroundColor: color.white,
-        borderColor: color.charcol10,
+        backgroundColor: colors.white,
+        borderColor: colors.charcol10,
         borderWidth: 1,
     },
     ghost: {
@@ -182,7 +181,7 @@ const variantStyles = {
  */
 const textStyles = {
     primary: { color: "#FFF" },
-    outlined: { color: color.charcol100 },
+    outlined: { color: colors.charcol100 },
     ghost: { color: "#333" },
 };
 

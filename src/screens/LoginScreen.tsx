@@ -34,6 +34,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { setEmail } from "@/redux/profileSlice";
 import Geolocation from 'react-native-geolocation-service';
+import { useApi } from "@/hook/useApi";
 
 const requestLocationPermission = async () => {
     if (Platform.OS === 'android') {
@@ -115,89 +116,76 @@ const LoginScreen = () => {
         loadRememberedCredentials();
     }, []);
 
-    // React Query mutation                               
-    const SignupUser = async (data: LoginFormData) => {
-        const response = await axios.post(`${API_BASE_URL}/auth/login`, {
-            email: data.email,
-            password: data.password,
-        });
-        return response.data;
-    };
+    const { mutate: signin, isPending: loading, error } = useApi();
 
-    const {
-        mutate: signin,
-        isPending: loading,
-        error,
-    } = useMutation({
-        mutationFn: SignupUser,
-        onSuccess: async (response, variables) => {
-            console.log(response?.success, "response login screen");
-            const isSuccess = response?.success
-            console.log(response,"response")
-            // Show toast message
-            Toast.show({
-                type: isSuccess ? 'success' : 'error',
-                text1: response?.message || (isSuccess ? "Signup successful" : "Something went wrong"),
-            });
+    const handleLogin = (data: LoginFormData) => {
+        signin({
+            url: '/auth/login',
+            method: 'POST',
+            data,
+            showToast: true,
+            // successMessage: 'Login successful!',
+            // errorMessage: 'Login failed!',
+        }, {
+            onSuccess: async (response) => {
+                const isSuccess = response?.success;
 
-            // Save tokens if success
-            if (isSuccess && response?.data) {
-                const { idToken, accessToken, refreshToken } = response.data;
+                if (isSuccess && response?.data) {
+                    const { idToken, accessToken, refreshToken } = response.data;
 
-                try {
-                    if (idToken && accessToken && refreshToken) {
+                    try {
                         await AsyncStorage.setItem('idToken', idToken);
                         await AsyncStorage.setItem('accessToken', accessToken);
                         await AsyncStorage.setItem('refreshToken', refreshToken);
-                    }
 
-                    if (accepted) {
-                        await AsyncStorage.setItem("rememberEmail", variables.email);
-                        await AsyncStorage.setItem("rememberPassword", variables.password);
-                    } else {
-                        await AsyncStorage.removeItem("rememberEmail");
-                        await AsyncStorage.removeItem("rememberPassword");
-                    }
-
-                    // ✅Save email to Redux store
-                    dispatch(setEmail(variables.email));
-
-                    try {
-                        const permissionGranted = await requestLocationPermission();
-                        if (!permissionGranted) {
-                            console.log("Location permission denied");
+                        if (accepted) {
+                            await AsyncStorage.setItem("rememberEmail", data.email);
+                            await AsyncStorage.setItem("rememberPassword", data.password);
                         } else {
-                            const { latitude, longitude } = await getUserLocation();
-                            await sendLocationToBackend(latitude, longitude, idToken);
+                            await AsyncStorage.removeItem("rememberEmail");
+                            await AsyncStorage.removeItem("rememberPassword");
                         }
-                    } catch (error) {
-                        console.error("Error getting/sending location:", error);
+
+                        dispatch(setEmail(data.email));
+
+                        // Navigate after token storage
+                        navigation.navigate("CreateAccount", {
+                            email: data.email,
+                            password: data.password,
+                        });
+                    } catch (e) {
+                        console.error("Token storage error", e);
                     }
-
-                } catch (e) {
-                    console.error("Error saving tokens to storage", e);
                 }
+            },
+        });
+    };
 
-                // Navigate after token storage
-                navigation.navigate("CreateAccount", {
-                    email: variables.email,
-                    password: variables.password,
-                });
+    useEffect(() => {
+        const getLocation = async () => {
+            try {
+                const permissionGranted = await requestLocationPermission();
+                if (permissionGranted) {
+                    const { latitude, longitude } = await getUserLocation();
+                    const idToken = await AsyncStorage.getItem('idToken');
+                    if (idToken) {
+                        await sendLocationToBackend(latitude, longitude, idToken);
+                    }
+                } else {
+                    console.log("Location permission denied");
+                }
+            } catch (error) {
+                console.error("Error getting/sending location:", error);
             }
+        };
 
-            reset();
-        },
-        onError: (error: any) => {
-            Toast.show({
-                type: 'error',
-                text1: "Something went wrong",
-                text2: error?.response?.data?.message || "Unexpected error occurred",
-            });
-        },
-    });
+        // Trigger the location request only after the user has navigated
+        getLocation();
+    }, []); // This effect runs when the component is mounted (after navigation)
+
 
     const onSubmit = (data: LoginFormData) => {
-        signin(data);
+        handleLogin(data);
     };
 
     useEffect(() => {

@@ -1,4 +1,3 @@
-import color from '@/styles/global';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
 import { AroundMeCardProps } from '@/types/type';
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
         alignSelf: "flex-start",
         paddingVertical: 4,
         paddingHorizontal: 12,
-        backgroundColor: color.charcol100,
+        backgroundColor: colors.charcol100,
         borderRadius: 40,
         alignItems: "center",
         width: "auto"

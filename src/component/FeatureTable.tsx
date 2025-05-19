@@ -1,5 +1,4 @@
-import color, { globalstyle } from "@/styles/global";
-import { getGlobalStyles } from "@/styles/globaltheme";
+import { colors, getGlobalStyles } from "@/styles/globaltheme";
 import { useTheme } from "@/ThemeContext";
 import { Feature } from "@/types/type";
 import React from "react";
@@ -40,7 +39,7 @@ const FeatureTable: React.FC<FeatureTableProps> = ({ data }) => {
                 renderItem={({ item }) => (
                     <View style={styles.row}>
                         <Text style={[styles.cell, styles.flex2, globalstyle.text_12_reg_50]}>{item.name}</Text>
-                        <Text style={[styles.cell, { color: isDarkMode ? color.white : color.black }]}>{item.free}</Text>
+                        <Text style={[styles.cell, { color: isDarkMode ? colors.white : colors.black }]}>{item.free}</Text>
                         <View style={styles.cell}>
                             {item.premium && <Image source={require("../assets/icons/purpletick.png")} style={styles.checkIcon} />}
                         </View>
@@ -61,7 +60,7 @@ const styles = StyleSheet.create({
         padding: 16,
         borderWidth: 1,
         borderStyle: "solid",
-        borderColor: color.charcol20
+        borderColor: colors.charcol20
     },
     row: {
         flexDirection: "row",

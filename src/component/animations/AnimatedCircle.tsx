@@ -1,4 +1,4 @@
-import color from '@/styles/global';
+import { colors } from '@/styles/globaltheme';
 import { AnimatedCircleProps } from '@/types/type';
 import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
@@ -54,7 +54,7 @@ const AnimatedCircle: React.FC<AnimatedCircleProps> = ({ number }) => {
                     cx="25"
                     cy="25"
                     r="20"
-                    stroke={color.charcol80}
+                    stroke={colors.charcol80}
                     strokeWidth="4"
                     fill="none"
                     strokeDasharray="125.6" // Circumference of the circle (2 * π * 20)
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
         transform: [{ translateX: -5 }, { translateY: -11 }],
         fontSize: 16,
         fontWeight: 'bold',
-        color: color.charcol80,
+        color: colors.charcol80,
         alignSelf: 'center',
     },
 });

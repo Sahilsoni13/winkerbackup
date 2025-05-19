@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet, ImageSourcePropType } from "react-native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { HeaderProps } from "@/types/type";
-import color from "@/styles/global";
 import { colors, getGlobalStyles } from "@/styles/globaltheme";
 import { useTheme } from "@/ThemeContext";
 
@@ -39,7 +38,7 @@ const HeaderBack: React.FC<HeaderProps> = ({ title, rightIcon, onRightPress }) =
             {/* Right Icon (Optional) */}
             {rightIcon ? (
                 <TouchableOpacity onPress={onRightPress}>
-                    <Image source={rightIcon} style={[styles.icon,{ tintColor: isDarkMode ? colors.white : colors.black }]} />
+                    <Image source={rightIcon} style={[styles.icon, { tintColor: isDarkMode ? colors.white : colors.black }]} />
                 </TouchableOpacity>
             ) : (
                 <View style={styles.spacer} /> // Empty View to Balance Layout

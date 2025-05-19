@@ -1,4 +1,3 @@
-// import color from '@/styles/global';
 // import { getGlobalStyles } from '@/styles/globaltheme';
 // import { useTheme } from '@/ThemeContext';
 // import { NavigationProp, useNavigation } from '@react-navigation/native';

@@ -1,6 +1,5 @@
 
 
-import color, { globalstyle } from "@/styles/global";
 import { colors, getGlobalStyles } from "@/styles/globaltheme";
 import { useTheme } from "@/ThemeContext";
 import { SecurityToggleProps } from "@/types/type";
@@ -39,7 +38,7 @@ const SecurityToggle: React.FC<SecurityToggleProps> = ({ iconSource, description
                 <Text style={[styles.description, globalstyle.text_14_reg_50]}>{description}</Text>
             </View>
             <TouchableOpacity onPress={onPress}>
-                <View style={{ paddingVertical: 4, paddingHorizontal: 12, backgroundColor: isDarkMode ? color.white : color.charcol10, borderRadius: 28 }}>
+                <View style={{ paddingVertical: 4, paddingHorizontal: 12, backgroundColor: isDarkMode ? colors.white : colors.charcol10, borderRadius: 28 }}>
                     <Text style={[globalstyle.text_12_med_90, { color: isDarkMode ? colors.black : colors.charcol90 }]}>{buttonText}</Text>
                 </View>
             </TouchableOpacity>
@@ -73,18 +72,18 @@ const styles = StyleSheet.create({
         width: 40,
         height: 20,
         borderRadius: 20,
-        backgroundColor: color.charcol30,
+        backgroundColor: colors.charcol30,
         justifyContent: "center",
         padding: 2,
     },
     toggleContainerActive: {
-        backgroundColor: color.charcol90,
+        backgroundColor: colors.charcol90,
     },
     toggleThumb: {
         width: 16,
         height: 16,
         borderRadius: 10,
-        backgroundColor: "#FFFFFF",
+        backgroundColor: colors.white,
         position: "absolute",
         left: 2,
     },

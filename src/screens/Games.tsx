@@ -1,6 +1,5 @@
 import GameCard from '@/component/GameCard';
-import color from '@/styles/global';
-import { getGlobalStyles } from '@/styles/globaltheme';
+import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -24,21 +23,21 @@ const Games = () => {
             title: 'Rock Paper Scissors',
             description: 'The classic quick decision-maker game.',
             image: gameImages.rockPaperScissors,
-            backgroundColor: color.purple,
+            backgroundColor: colors.purple,
             screen: "RockPaperScissorsScreen",
         },
         {
             title: 'Throw Dart',
             description: 'Take your aim and throw the dart.',
             image: gameImages.throwDart,
-            backgroundColor: color.skyblue,
+            backgroundColor: colors.skyblue,
             screen: "ThrowDartScreen",
         },
         {
             title: 'Spin the Wheel',
             description: 'Spin the wheel and choose a fun challenge.',
             image: gameImages.spinTheWheel,
-            backgroundColor: color.darkpurple,
+            backgroundColor: colors.darkpurple,
             screen: "SpinTheWheelScreen",
         },
     ];

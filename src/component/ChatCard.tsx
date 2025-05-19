@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
         height: 52,
         borderRadius: 25,
         borderWidth: 2,
-        borderColor: color.charcol10
+        borderColor: colors.charcol10
     },
     onlineDot: {
         position: 'absolute',
@@ -90,9 +90,9 @@ const styles = StyleSheet.create({
         width: 16,
         height: 16,
         borderRadius: 8,
-        backgroundColor: color.green,
+        backgroundColor: colors.green,
         borderWidth: 2,
-        borderColor: color.charcol10,
+        borderColor: colors.charcol10,
     },
     chatInfo: {
         flex: 1,
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
         marginBottom: 7,
     },
     notificationBadge: {
-        backgroundColor: color.purple50, // Purple
+        backgroundColor: colors.purple50, // Purple
         borderRadius: 8,
         width: 20,
         height: 20,

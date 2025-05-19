@@ -77,8 +77,7 @@
 
 // export default SafeAreaWrapper;
 
-import color from "@/styles/global";
-import { colors, getGlobalStyles } from "@/styles/globaltheme";
+import { colors } from "@/styles/globaltheme";
 import { useTheme } from "@/ThemeContext";
 import React from "react";
 import {
@@ -87,8 +86,6 @@ import {
     Platform,
     StyleSheet,
     ViewProps,
-    Dimensions,
-    useColorScheme,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -101,8 +98,7 @@ interface SafeAreaWrapperProps extends ViewProps {
 
 const SafeAreaWrapper: React.FC<SafeAreaWrapperProps> = ({
     children,
-    // statusBarColor = color.white, 
-    bottomInsetColor = color.charcol100,
+    bottomInsetColor = colors.charcol100,
     style,
     ...props
 }) => {

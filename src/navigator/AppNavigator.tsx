@@ -16,9 +16,9 @@ import ForgotPassword from '@/screens/ForgotPassword';
 import SplashScreen from '@/screens/SplashScreen';
 import ChatScreen from '@/screens/ChatScreen';
 import { useTheme } from '@/ThemeContext';
-import color from '@/styles/global';
 import SignupScreen from '@/screens/SignupScreen';
 import LoginScreen from '@/screens/LoginScreen';
+import { colors } from '@/styles/globaltheme';
 
 const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
@@ -27,9 +27,9 @@ const AppNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        contentStyle: { backgroundColor: isDarkMode ? color.charcol90 : color.white },
+        contentStyle: { backgroundColor: isDarkMode ? colors.charcol90 : colors.white },
       }}
-      initialRouteName="SplashScreen"
+      initialRouteName="LoginScreen"
     >
       <Stack.Screen
         name="MainTab"
