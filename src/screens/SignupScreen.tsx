@@ -15,7 +15,6 @@ import {
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import Input from "@/component/Input";
 import HeaderBack from "@/component/HeaderBack";
-import Checkbox from "@/component/Checkbox";
 import Button from "@/component/Button";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -30,7 +29,6 @@ import { SignupSchema } from "@/validations/SignupSchema";
 type SignupFormData = z.infer<typeof SignupSchema>;
 
 const SignupScreen = () => {
-    const [accepted, setAccepted] = useState(false);
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
     const [keyboardOffset, setKeyboardOffset] = useState(0);
 
@@ -202,7 +200,6 @@ const SignupScreen = () => {
 };
 
 export default SignupScreen;
-
 
 const styles = StyleSheet.create({
     keyboardAvoidingView: {
