@@ -29,13 +29,14 @@ const AppNavigator = () => {
       screenOptions={{
         contentStyle: { backgroundColor: isDarkMode ? color.charcol90 : color.white },
       }}
-      initialRouteName="LoginScreen"
+      initialRouteName="SplashScreen"
     >
-      <Stack.Screen 
+      <Stack.Screen
         name="MainTab"
         component={BottomTabsNavigator}
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
         name="ChatScreen"
         component={ChatScreen}
