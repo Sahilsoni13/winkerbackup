@@ -242,7 +242,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { NavigationProp, RouteProp, useNavigation,  useRoute, } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useNavigation, useRoute, } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -253,18 +253,13 @@ import WelComeAnimation from '@/component/accountsetupscreen/WelComeAnimation';
 import Button from '@/component/Button';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
-import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_BASE_URL } from '@/apiInfo';
-import Toast from 'react-native-toast-message';
+import { useApi } from '@/hook/useApi';
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
 const AccountSetupScreen = () => {
-   const route = useRoute<RouteProp<{ params: { email: string;  } }, "params">>();
-   const email  = route.params;
-console.log(email,"emailnow")
+  const route = useRoute<RouteProp<{ params: { email: string; } }, "params">>();
+  const email = route.params;
   const [step, setStep] = useState<number>(1);
   const totalSteps = 3;
   const totalDots = 2;
@@ -286,57 +281,39 @@ console.log(email,"emailnow")
       profilePictureUrl: '',
     },
   });
-
-  // API call for profile submission
+  const { mutate: createUser, isPending: loading } = useApi();
   const UserProfile = async (data: ProfileFormData) => {
     console.log(data)
-    const token = await AsyncStorage.getItem('idToken');
-    const response = await axios.post(`${API_BASE_URL}/users/profile/image-upload-url`,
-      {
+    createUser({
+      url: '/users/profile/image-upload-url',
+      method: 'POST',
+      data: {
         firstName: data.firstName,
         lastName: data.lastName,
         profilePictureUrl: data.profilePictureUrl,
         email: email,
       },
+      showToast: true,
+    },
       {
-        headers: {
-          Authorization: token,
+        onSuccess: (response) => {
+          const isSuccess = response?.success;
+          if (isSuccess) {
+            if (step < totalSteps) {
+              setStep(step + 1); // Move to next step
+            } else {
+              navigation.navigate('MainTab'); // Navigate to final screen
+            }
+          }
+          navigation.navigate('MainTab');
         },
-      }
-    );
-    return response.data ;
+      });
   };
 
-  const { mutate: profile, isPending: loading } = useMutation({
-    mutationFn: UserProfile,
-    onSuccess: (response) => {
-      const isSuccess = response?.success;
-      Toast.show({ 
-        type: isSuccess ? 'success' : 'error',
-        text1: response?.message || (isSuccess ? 'Profile updated' : 'Something went wrong'),
-      });
-      if (isSuccess) {
-        if (step < totalSteps) {
-          setStep(step + 1); // Move to next step
-        } else {
-          navigation.navigate('MainTab'); // Navigate to final screen
-        }
-      }
-    },
-    onError: (error: any) => {
-      console.log(error.stack)
-      Toast.show({
-        type: 'error',
-        text1: 'Something went wrong',
-        text2: error?.response?.data?.message || 'Unexpected error occurred',
-      });
-    },
-  });
-
   // Handle form submission and step navigation
-  const handleNext = handleSubmit((data:ProfileFormData) => {
+  const handleNext = handleSubmit((data: ProfileFormData) => {
     if (step === 1) {
-      profile(data); // Submit form data for step 2
+      UserProfile(data); // Submit form data for step 2
     } else if (step < totalSteps) {
       setStep(step + 1);
     } else {
@@ -487,4 +464,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AccountSetupScreen;
+export default AccountSetupScreen; 

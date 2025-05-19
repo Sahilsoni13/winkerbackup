@@ -31,6 +31,7 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { useApi } from '@/hook/useApi';
 
 type SignupFormData = z.infer<typeof createAcocuntSchema>;
 
@@ -86,38 +87,26 @@ const CreateAccount = () => {
             throw error; // so React Query can handle it
         }
     };
-    const {
-        mutate: createuser,
-        isPending: loading,
-        error,
-    } = useMutation({
-        mutationFn: SignupUser,
-        onSuccess: async (response, variables) => {
-            console.log(variables)
-            const isSuccess = response?.success
-            console.log(response,"response")
-            Toast.show({
-                type: isSuccess ? 'success' : 'error',
-                text1: response?.data.message || (isSuccess ? "Signup successful" : "Something went wrong"),
-            });
-            if (isSuccess && response?.data) {
-                navigation.navigate("AccountSetupScreen", {
-                    email: email,
-                });
-            }
-            reset();
-        },
-        onError: (error: any) => {
-            console.log(error.stack)
-            Toast.show({
-                type: 'error',
-                text1: "Something went wrong",
-                text2: error?.response?.data?.message || "Unexpected error occurred",
-            });
-        },
-    });
+    const { mutate: createUser, isPending: loading } = useApi();
     const onSubmit = (data: SignupFormData) => {
-        createuser(data);
+        const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
+        createUser({
+            url: '/users',
+            method: 'POST',
+            data: {
+                email: email,
+                birthDate: birthDate,
+                gender: data.gender,
+                aura: data.aura,
+            },
+            showToast: true,
+        },
+            {
+                onSuccess: (response) => {
+                    console.log(response)
+                    navigation.navigate('MainTab'); 
+                },
+            });
     };
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => {
@@ -157,13 +146,13 @@ const CreateAccount = () => {
                         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                             <View style={styles.innerContainer}>
                                 <View style={styles.inputscantiner}>
-                                            <Input
-                                                label="Email"
-                                                placeholder="Enter email"
-                                                leftIcon={require("../assets/icons/email.png")}
-                                                value={email}
-                                                editable={false}
-                                            />
+                                    <Input
+                                        label="Email"
+                                        placeholder="Enter email"
+                                        leftIcon={require("../assets/icons/email.png")}
+                                        value={email}
+                                        editable={false}
+                                    />
                                     <Controller
                                         control={control}
                                         name="gender"

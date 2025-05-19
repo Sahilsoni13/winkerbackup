@@ -10,7 +10,7 @@ import { z } from "zod";
 *   confirmPassword: z.ZodString
 * }>}
 */
-export const createAcocuntSchema = z.object({
+export const createAcocuntSchema = z.object({                                           
     dob: z.object({
         day: z.string().regex(/^(0?[1-9]|[12][0-9]|3[01])$/, "Invalid day"),
         month: z.string().regex(/^(0?[1-9]|1[0-2])$/, "Invalid month"),
