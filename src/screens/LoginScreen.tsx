@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Toast from "react-native-toast-message";
 import { PermissionsAndroid } from 'react-native';
 
 import {
@@ -26,7 +25,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { colors, getGlobalStyles } from "@/styles/globaltheme";
 import { useTheme } from "@/ThemeContext";
 import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
 import { API_BASE_URL } from "@/apiInfo";
 import { SignupSchema } from "@/validations/SignupSchema";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -179,9 +177,8 @@ const LoginScreen = () => {
             }
         };
 
-        // Trigger the location request only after the user has navigated
         getLocation();
-    }, []); // This effect runs when the component is mounted (after navigation)
+    }, []);
 
 
     const onSubmit = (data: LoginFormData) => {

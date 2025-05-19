@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import {
   NavigationProp,
@@ -27,108 +28,67 @@ import Toast from "react-native-toast-message";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { API_BASE_URL } from "@/apiInfo";
+import { useApi } from "@/hook/useApi";
 
 const OtpVerificationScreen = () => {
   const navigation = useNavigation<NavigationProp<any>>();
-  const route = useRoute<RouteProp<{ params: { email: string; password: string } }, "params">>();
+  const route = useRoute<RouteProp<{ params: { email: string; password: string } }, 'params'>>();
   const { email, password } = route.params;
 
   const otpLength = 6;
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState('');
   const [keyboardOffset, setKeyboardOffset] = useState(0);
 
   const globalstyle = getGlobalStyles();
   const { isDarkMode } = useTheme();
 
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", (event) => {
-      setKeyboardOffset(Platform.OS === "ios" ? event.endCoordinates.height + 20 : 25);
+    const showSub = Keyboard.addListener('keyboardDidShow', (event) => {
+      setKeyboardOffset(Platform.OS === 'ios' ? event.endCoordinates.height + 20 : 25);
     });
-
-    const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
-      setKeyboardOffset(0);
-    });
-
+    const hideSub = Keyboard.addListener('keyboardDidHide', () => setKeyboardOffset(0));
     return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
+      showSub.remove();
+      hideSub.remove();
     };
   }, []);
 
-  const verifyOtpMutation = useMutation({
-    mutationFn: async (otpCode: string) => {
-      const response = await axios.post(`${API_BASE_URL}/auth/verify-email`, {
-        email,
-        code: otpCode,
-        password,
-      });
-      return response.data;
-    },
-    onSuccess: (response) => {
-      if (response?.statusCode === 201) {
-        Toast.show({
-          type: "success",
-          text1: "Success",
-          text2: response.message || "Email verified successfully!",
-        });
-        navigation.navigate("LoginScreen");
-      } else {
-        Toast.show({
-          type: "error",
-          text1: "Verification Failed",
-          text2: response?.message || "Unexpected response.",
-        });
-      }
-    },
-    onError: (error: any) => {
-      Toast.show({
-        type: "error",
-        text1: "Verification Failed",
-        text2: error?.response?.data?.message || "Something went wrong!",
-      });
-    },
-  });
-
+  // ✅ verify OTP using useApi
+  const { mutate: verifyOtp, isPending: isVerifying } = useApi();
+  const { mutate: resendOtp, isPending: isResending } = useApi();
 
   const handleVerify = () => {
     if (otp.length !== otpLength) {
       Toast.show({
-        type: "error",
-        text1: "Invalid OTP",
-        text2: "Please enter all 6 digits.",
+        type: 'error',
+        text1: 'Invalid OTP',
+        text2: 'Please enter all 6 digits.',
       });
       return;
     }
 
-    verifyOtpMutation.mutate(otp);
+    verifyOtp({
+      url: '/auth/verify-email',
+      method: 'POST',
+      data: { email, code: otp, password },
+      showToast: true,
+    }, {
+      onSuccess: async (response) => {
+        const isSuccess = response?.success;
+        if (isSuccess) {
+          navigation.navigate("LoginScreen");
+        }
+      }
+    });
   };
 
-  const resendOtpMutation = useMutation({
-    mutationFn: async () => {
-      const response = await axios.post(`${API_BASE_URL}/auth/signup`, {
-        email: email,
-        password: password,
-      });
-      return response.data;
-    },
-    onSuccess: (response) => {
-      Toast.show({
-        type: "success",
-        text1: "OTP Sent",
-        text2: response.message || "A new OTP has been sent to your email.",
-      });
-    },
-    onError: (error: any) => {
-      Toast.show({
-        type: "error",
-        text1: "Resend Failed",
-        text2: error?.response?.data?.message || "Unable to resend OTP.",
-      });
-    },
-  });
-
   const handleResend = () => {
-    resendOtpMutation.mutate();
+    resendOtp({
+      url: '/auth/signup',
+      method: 'POST',
+      data: { email, password },
+      showToast: true,
+    });
   };
 
   return (
@@ -208,17 +168,17 @@ const OtpVerificationScreen = () => {
                 </View>
 
                 <View style={{ flexDirection: "column", gap: 16, marginTop: 16 }}>
-                  <TouchableOpacity onPress={handleResend} >
+                  <TouchableOpacity onPress={() => handleResend()} >
                     <Text style={[styles.resendText, globalstyle.text_14_reg_40]}>
                       Didn't receive the code?{" "}
-                      <Text style={globalstyle.text_14_bold_pur50}>Resend Code</Text>
+                      <Text style={globalstyle.text_14_bold_pur50}> {isResending && <ActivityIndicator />} Resend Code</Text>
                     </Text>
                   </TouchableOpacity>
                   <Button
                     variant="primary"
-                    onPress={handleVerify}
+                    onPress={() => handleVerify()}
                     title="Verify and Continue"
-                    isLoading={verifyOtpMutation.isPending}
+                    isLoading={isVerifying}
                   />
                 </View>
 
