@@ -1,11 +1,13 @@
 import HeaderBack from '@/component/HeaderBack';
+import { useApi } from '@/hook/useApi';
 import color, { globalstyle } from '@/styles/global';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 const UserDetails = () => {
+
 
     /**
  * @typedef {Object} User
@@ -22,16 +24,35 @@ const UserDetails = () => {
         name: 'Maya',
         age: 20,
         location: 'New York, NY',
-        bio: "Hi, I’m Emma! I’m an adventurous soul who loves hiking, live music, and trying out new recipes. I’m looking for someone to share laughs and create memories with.",
+        bio: "Hi, I'm Emma! I'm an adventurous soul who loves hiking, live music, and trying out new recipes. I'm looking for someone to share laughs and create memories with.",
         joinedParties: ['Tech Group', 'Chess group', "McDonald's group",],
         profileImage: require('../assets/images/cardimg3.png'),
     };
-const globalstyle = getGlobalStyles();
-const { isDarkMode } = useTheme();
+    const globalstyle = getGlobalStyles();
+    const { isDarkMode } = useTheme();
+
+    const [profile, setProfile] = useState(null);
+    console.log(profile, "profile")
+    const { mutate: fetchUser, isPending, isError, error } = useApi();
+    const userId = "bc0dd9ba-5963-4fca-80f5-ad9315f5a980"; // 🧑 static for now
+    useEffect(() => {
+        fetchUser(
+            {
+                url: `/users/${userId}`, // 👈 dynamic userId used here
+                method: 'GET',
+                showToast: false,
+            },
+            {
+                onSuccess: (response) => {
+                    setProfile(response.data);
+                },
+                onError: (err) => {
+                    console.log('❌ Error fetching profile:', err.message);
+                },
+            }
+        );
+    }, []);
     return (
-
-
-
         <View style={[styles.container, globalstyle.container]}>
             <HeaderBack
                 title={"User Details"}
@@ -48,7 +69,7 @@ const { isDarkMode } = useTheme();
                     <View style={styles.locationContainer}>
                         <Image
                             source={require('../assets/icons/location.png')}
-                            style={[styles.locationIcon,{ tintColor: isDarkMode ? colors.white : colors.black }]}
+                            style={[styles.locationIcon, { tintColor: isDarkMode ? colors.white : colors.black }]}
                         />
                         <Text style={[globalstyle.text_18_reg_90]}>{user.location}</Text>
                     </View>
@@ -63,7 +84,7 @@ const { isDarkMode } = useTheme();
                             My Aura <Text>✨</Text>
                         </Text>
                         <View style={[styles.bioContainer, globalstyle.border]}>
-                            <Text style={[globalstyle.text_14_reg_60,{color:isDarkMode?colors.charcol30:colors.charcol60}]}>{user.bio}</Text>
+                            <Text style={[globalstyle.text_14_reg_60, { color: isDarkMode ? colors.charcol30 : colors.charcol60 }]}>{user.bio}</Text>
                         </View>
                     </View>
                     {/* Joined Parties Section */}
@@ -75,7 +96,7 @@ const { isDarkMode } = useTheme();
                             {
                                 user?.joinedParties?.map((item, index) => {
                                     return (
-                                        <View key={Date.now() + index + "joinedlist"} style={[styles.partyTag,{backgroundColor:isDarkMode?color.charcol80:colors.charcol05}]}>
+                                        <View key={Date.now() + index + "joinedlist"} style={[styles.partyTag, { backgroundColor: isDarkMode ? color.charcol80 : colors.charcol05 }]}>
                                             <Text style={globalstyle.text_14_semi_90}>{item}</Text>
                                         </View>
                                     )

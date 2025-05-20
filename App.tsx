@@ -52,6 +52,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // 🔁 Redux
 import { Provider as ReduxProvider } from "react-redux";
 import { store } from "./src/redux/store";
+import { AuthProvider } from "@/context/AuthContext";
 
 // ✅ Create React Query Client
 const queryClient = new QueryClient();
@@ -66,9 +67,11 @@ const App: React.FC = () => {
           <ThemeProvider>
             <SafeAreaWrapper>
               <NavigationContainer>
-                <GestureHandlerRootView>
-                  <AppNavigator />
-                </GestureHandlerRootView>
+                <AuthProvider>
+                  <GestureHandlerRootView>
+                    <AppNavigator />
+                  </GestureHandlerRootView>
+                </AuthProvider>
               </NavigationContainer>
             </SafeAreaWrapper>
           </ThemeProvider>

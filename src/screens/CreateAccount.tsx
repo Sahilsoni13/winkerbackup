@@ -56,7 +56,9 @@ const CreateAccount = () => {
         defaultValues: {
             dob: { day: '', month: '', year: '' },
             gender: "Male",
-            aura: ""
+            aura: "",
+            firstName: "",
+            lastName: ""
         },
     });
 
@@ -98,13 +100,15 @@ const CreateAccount = () => {
                 birthDate: birthDate,
                 gender: data.gender,
                 aura: data.aura,
+                firstName: data.firstName,
+                lastName: data.lastName
             },
             showToast: true,
         },
             {
                 onSuccess: (response) => {
-                    console.log(response)
-                    navigation.navigate('MainTab'); 
+                    console.log(response,"response")
+                    navigation.navigate('MainTab');
                 },
             });
     };
@@ -146,12 +150,38 @@ const CreateAccount = () => {
                         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                             <View style={styles.innerContainer}>
                                 <View style={styles.inputscantiner}>
-                                    <Input
+                                    {/* <Input
                                         label="Email"
                                         placeholder="Enter email"
                                         leftIcon={require("../assets/icons/email.png")}
                                         value={email}
                                         editable={false}
+                                    /> */}
+                                    <Controller
+                                        control={control}
+                                        name="firstName"
+                                        render={({ field: { onChange, value } }) => (
+                                            <Input
+                                                label="FirstName"
+                                                placeholder="Enter firstName"
+                                                value={value}
+                                                onChangeText={onChange}
+                                                error={errors.firstName?.message}
+                                            />
+                                        )}
+                                    />
+                                    <Controller
+                                        control={control}
+                                        name="lastName"
+                                        render={({ field: { onChange, value } }) => (
+                                            <Input
+                                                label="LastName"
+                                                placeholder="Enter lastName"
+                                                value={value}
+                                                onChangeText={onChange}
+                                                error={errors.lastName?.message}
+                                            />
+                                        )}
                                     />
                                     <Controller
                                         control={control}

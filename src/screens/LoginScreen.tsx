@@ -52,6 +52,7 @@ const getUserLocation = (): Promise<{ latitude: number; longitude: number }> => 
             (position) => {
                 const { latitude, longitude } = position.coords;
                 resolve({ latitude, longitude });
+                console.log(position.coords)
             },
             (error) => reject(error),
             { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
@@ -112,12 +113,10 @@ const LoginScreen = () => {
                 console.error("Error loading remembered credentials", e);
             }
         };
-
         loadRememberedCredentials();
     }, []);
 
     const { mutate: signin, isPending: loading, error } = useApi();
-
     const handleLogin = (data: LoginFormData) => {
         signin({
             url: '/auth/login',
@@ -125,7 +124,7 @@ const LoginScreen = () => {
             data,
             showToast: true,
             // successMessage: 'Login successful!',
-            // errorMessage: 'Login failed!',
+            // errorMessage: 'Login failed!',   
         }, {
             onSuccess: async (response) => {
                 const isSuccess = response?.success;
@@ -149,6 +148,10 @@ const LoginScreen = () => {
                         dispatch(setEmail(data.email));
 
                         // Navigate after token storage
+                        // navigation.navigate("MainTab", {
+                        //     email: data.email,
+                        //     password: data.password,
+                        // });
                         navigation.navigate("CreateAccount", {
                             email: data.email,
                             password: data.password,

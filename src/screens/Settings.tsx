@@ -233,13 +233,15 @@
 // export default Settings;
 
 import CircularProgressAnimation from '@/component/animations/CircularProgressAnimation';
+import { useAuth } from '@/context/AuthContext';
 import { useApi } from '@/hook/useApi';
 import color, { globalstyle } from '@/styles/global';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 // Define the Profile interface based on API response
 interface Profile {
@@ -302,20 +304,28 @@ const Settings = () => {
     const [profile, setProfile] = useState<Profile | null>(null);
 
     // API hook for fetching user profile
-    const { mutate: fetchUser, isPending, error } = useApi();
+    const { mutate: fetchUser, isPending: loading, error } = useApi();
+
+    const checkToken = async () => {
+        const token = await AsyncStorage.getItem("idToken");
+        console.log(token)
+    }
+
+
+
 
     useEffect(() => {
+        checkToken()
         fetchUser(
             {
                 url: '/users/profile',
                 method: 'GET',
-                showToast: true,
-                successMessage: 'User fetched successfully!',
+                showToast: false,
             },
             {
                 onSuccess: (response) => {
-                    console.log('Profile data:', response.data);
-                    setProfile(response.data); // Store API response in state
+                    setProfile(response.data);
+                    console.log(response, "new resonse")
                 },
                 onError: (err) => {
                     console.log('Error fetching profile:', err.message);
@@ -355,24 +365,7 @@ const Settings = () => {
         progress: 0,
     };
 
-    // Handle loading and error states
-    if (isPending) {
-        return (
-            <View style={[styles.container, globalstyle.container]}>
-                <ActivityIndicator size="large" color={isDarkMode ? colors.white : colors.black} />
-            </View>
-        );
-    }
-
-    if (error) {
-        return (
-            <View style={[styles.container, globalstyle.container]}>
-                <Text style={[globalstyle.text_16_reg_50, { color: isDarkMode ? colors.white : colors.black }]}>
-                    Error: {error.message}
-                </Text>
-            </View>
-        );
-    }
+    console.log(profile?.firstName, "firstname")
 
     // Calculate display values with null checks
     const displayName = profile
@@ -383,6 +376,12 @@ const Settings = () => {
         : fallbackUserdata.profileImage;
     const progress = calculateProfileCompletion(profile);
 
+    const { isLoggedIn, logout } = useAuth();
+
+    // Call logout on button press
+    const handleLogout = async () => {
+        await logout();
+    };
     return (
         <View style={[styles.container, globalstyle.container]}>
             {/* User Profile Section */}
@@ -446,7 +445,7 @@ const Settings = () => {
                 </View>
             </View>
             {/* Logout Button */}
-            <TouchableOpacity style={styles.logoutButton}>
+            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
                 <Text style={[styles.logoutText, globalstyle.text_14_bold_90]}>Logout</Text>
                 <Image
                     style={{ width: 20, height: 20, tintColor: isDarkMode ? colors.white : colors.black }}
