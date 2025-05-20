@@ -150,10 +150,10 @@ const LoginScreen = () => {
                         //     email: data.email,
                         //     password: data.password,
                         // });
-                        navigation.navigate("CreateAccount", {
-                            email: data.email,
-                            password: data.password,
-                        });
+                            navigation.navigate("CreateAccount", {
+                                email: data.email,
+                                password: data.password,
+                            });
                     } catch (e) {
                         console.error("Token storage error", e);
                     }

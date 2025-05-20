@@ -108,7 +108,7 @@ const CreateAccount = () => {
             {
                 onSuccess: (response) => {
                     console.log(response,"response")
-                    navigation.navigate('MainTab');
+                    navigation.navigate('AccountSetupScreen');
                 },
             });
     };
@@ -162,8 +162,8 @@ const CreateAccount = () => {
                                         name="firstName"
                                         render={({ field: { onChange, value } }) => (
                                             <Input
-                                                label="FirstName"
-                                                placeholder="Enter firstName"
+                                                label="First Name"
+                                                placeholder="Enter first name"
                                                 value={value}
                                                 onChangeText={onChange}
                                                 error={errors.firstName?.message}
@@ -175,8 +175,8 @@ const CreateAccount = () => {
                                         name="lastName"
                                         render={({ field: { onChange, value } }) => (
                                             <Input
-                                                label="LastName"
-                                                placeholder="Enter lastName"
+                                                label="Last Name"
+                                                placeholder="Enter last name"
                                                 value={value}
                                                 onChangeText={onChange}
                                                 error={errors.lastName?.message}
@@ -277,14 +277,6 @@ const CreateAccount = () => {
 
                                 </View>
                                 <View style={styles.bottombtns}>
-                                    <View style={styles.accountInfoContainer}>
-                                        <Text style={[styles.accountinfotext, globalstyle.text_14_reg_40]}>
-                                            Already have an account?
-                                        </Text>
-                                        <TouchableOpacity onPress={() => navigation.navigate("SignupScreen")}>
-                                            <Text style={[globalstyle.text_14_bold_pur50]}> Log in</Text>
-                                        </TouchableOpacity>
-                                    </View>
                                     <Button
                                         onPress={handleSubmit(onSubmit)}
                                         // onPress={()=>navigation.navigate("AccountSetupScreen")}

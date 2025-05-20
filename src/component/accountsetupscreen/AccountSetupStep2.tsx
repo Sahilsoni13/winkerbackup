@@ -717,34 +717,6 @@ const AccountSetupStep2: React.FC<AccountSetupStep2Props> = ({ control, errors }
                     )}
                 />
             </View>
-            <View style={styles.inputcantainer} >
-                <Controller
-                    control={control}
-                    name="firstName"
-                    render={({ field: { onChange, value } }) => (
-                        <Input
-                            label="FirstName"
-                            placeholder="Enter Firstname"
-                            value={value}
-                            onChangeText={onChange}
-                            error={errors.firstName?.message}
-                        />
-                    )}
-                />
-                <Controller
-                    control={control}
-                    name="lastName"
-                    render={({ field: { onChange, value } }) => (
-                        <Input
-                            label="LastName"
-                            placeholder="Enter Lastname"
-                            value={value}
-                            onChangeText={onChange}
-                            error={errors.lastName?.message}
-                        />
-                    )}
-                />
-            </View>
         </View>
     );
 };

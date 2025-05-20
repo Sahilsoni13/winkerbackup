@@ -251,7 +251,7 @@ import AccountSetupStep2 from '@/component/accountsetupscreen/AccountSetupStep2'
 import AccountSetupStep3 from '@/component/accountsetupscreen/AccountSetupStep3';
 import WelComeAnimation from '@/component/accountsetupscreen/WelComeAnimation';
 import Button from '@/component/Button';
-import { colors, getGlobalStyles } from '@/styles/globaltheme';
+import { color, colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
 import { useApi } from '@/hook/useApi';
 
@@ -276,8 +276,6 @@ const AccountSetupScreen = () => {
   } = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
       profilePictureUrl: '',
     },
   });
@@ -288,8 +286,6 @@ const AccountSetupScreen = () => {
       url: '/users/profile/image-upload-url',
       method: 'POST',
       data: {
-        firstName: data.firstName,
-        lastName: data.lastName,
         profilePictureUrl: data.profilePictureUrl,
         email: email,
       },
@@ -410,6 +406,10 @@ const AccountSetupScreen = () => {
           >
             <View style={[styles.container, globalstyle.container]}>
               {renderContent()}
+              <TouchableOpacity onPress={()=>navigation.navigate("MainTab")} style={[{ flexDirection: "row", justifyContent: "center", alignItems: "center" }]}>
+                <Text style={[globalstyle.text_14_bold_90]}>Skip</Text>
+                <Image source={require("@/assets/icons/rightarrow.png")} style={[{ width: 20, height: 20, tintColor: isDarkMode ? colors.white : colors.black }]} />
+              </TouchableOpacity>
               <View style={[step === totalSteps && { display: 'none' }, { paddingTop: 20 }]}>
                 <Button
                   title={step === totalSteps ? 'Start' : 'Next'}

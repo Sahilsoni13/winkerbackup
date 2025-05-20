@@ -200,6 +200,7 @@ export const useApi = () => {
                 Toast.show({
                     type: 'success',
                     text1: message,
+                    visibilityTime: 1500
                 });
             }
         },
@@ -216,6 +217,7 @@ export const useApi = () => {
                     type: 'error',
                     text1: 'Error ❌',
                     text2: message,
+                    visibilityTime: 1500
                 });
             }
         },
