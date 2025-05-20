@@ -143,6 +143,7 @@ import axios, { Method } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import { API_BASE_URL } from '@/apiInfo';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 
 type AppMutationOptions = {
     url: string;
@@ -164,7 +165,7 @@ export const useApi = () => {
             'Content-Type': 'application/json',
         };
         if (token) {
-            headers.Authorization = `Bearer ${token}`;
+            headers.Authorization = token;
         }
 
         const response = await axios({
@@ -192,9 +193,9 @@ export const useApi = () => {
         onSuccess: (response, variables) => {
             if (variables.showToast) {
                 const message =
-                    response?.message || // if response contains a `message` field
-                    variables.successMessage || // fallback to custom message
-                    'Success ✅'; // default
+                    response?.message ||
+                    variables.successMessage ||
+                    'Success ✅';
 
                 Toast.show({
                     type: 'success',
@@ -202,6 +203,7 @@ export const useApi = () => {
                 });
             }
         },
+
         onError: (err: any, variables) => {
             if (variables.showToast) {
                 const message =
