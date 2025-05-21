@@ -13,6 +13,7 @@ import { z } from "zod";
 export const createAcocuntSchema = z.object({
     firstName: z.string().nonempty("Enter Your firstName"),
     lastName: z.string().nonempty("Enter Your lastName"),
+    phone: z.string().nonempty("Phone Number Is Required"),
     dob: z.object({
         day: z.string().regex(/^(0?[1-9]|[12][0-9]|3[01])$/, "Invalid day"),
         month: z.string().regex(/^(0?[1-9]|1[0-2])$/, "Invalid month"),

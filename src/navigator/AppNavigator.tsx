@@ -19,6 +19,7 @@ import { useTheme } from '@/ThemeContext';
 import SignupScreen from '@/screens/SignupScreen';
 import LoginScreen from '@/screens/LoginScreen';
 import { colors } from '@/styles/globaltheme';
+import EditProfile from '@/screens/EditProfile';
 
 const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
@@ -34,6 +35,11 @@ const AppNavigator = () => {
       <Stack.Screen
         name="MainTab"
         component={BottomTabsNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfile}
         options={{ headerShown: false }}
       />
 

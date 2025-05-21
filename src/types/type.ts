@@ -103,10 +103,11 @@ export interface HousePartyCardProps {
 */
 
 export interface AroundMeCardProps {
-  name: string;
+  name?: string;
   age: number;
   location: string;
-  image: ImageSourcePropType;
+  image?: ImageSourcePropType;
+  firstName?:string
   // wink: string
 };
 

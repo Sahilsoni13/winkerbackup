@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { isTokenValid } from '../utils/jwtUtils';
 
@@ -17,15 +17,13 @@ type RootStackParamList = {
     MainTab: undefined;
 };
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [token, setToken] = useState<string | null>(null);
-    const navigation = useNavigation<NavigationProp>();
-
+    const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
     // Check login status on app start
     useEffect(() => {
         const checkLoginStatus = async () => {
@@ -36,10 +34,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 if (storedToken && isTokenValid(storedToken)) {
                     setToken(storedToken);
                     setIsLoggedIn(true);
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: 'MainTab' }],
-                    });
                 } else {
                     await AsyncStorage.removeItem('idToken');
                     setIsLoggedIn(false);

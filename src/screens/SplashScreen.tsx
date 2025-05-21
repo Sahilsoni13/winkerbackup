@@ -1,10 +1,23 @@
+import { useAuth } from '@/context/AuthContext';
 import { getGlobalStyles } from '@/styles/globaltheme';
-import React from 'react';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import React, { useEffect } from 'react';
 import { Image, View } from 'react-native';
 
 const SplashScreen = () => {
+    const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
     const globalstyle = getGlobalStyles();
+    const { isLoggedIn } = useAuth();
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (isLoggedIn) {
+                navigation.navigate('MainTab');
+            }
+        }, 1500);
+
+        return () => clearTimeout(timer);
+    }, [isLoggedIn, navigation]);
     return (
         <View
             style={[
@@ -13,7 +26,7 @@ const SplashScreen = () => {
                     flex: 1,
                     flexDirection: 'column',
                     alignItems: 'center',
-                    justifyContent: 'center',   
+                    justifyContent: 'center',
                 },
             ]}
         >

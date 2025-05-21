@@ -7,19 +7,12 @@ import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 const UserDetails = () => {
-
-
-    /**
- * @typedef {Object} User
- * @property {string} name - The name of the user.
- * @property {number} age - The age of the user.
- * @property {string} location - The location of the user.
- * @property {string} bio - A short biography of the user.
- * @property {string[]} joinedParties - List of joined groups.
- * @property {any} profileImage - Path to the user's profile image.
- */
-
-
+    interface UserProfile {
+        firstName?: string;
+        lastName?: string;
+        aura?: string;
+        birthDate?: string;
+    }
     const user = {
         name: 'Maya',
         age: 20,
@@ -31,8 +24,7 @@ const UserDetails = () => {
     const globalstyle = getGlobalStyles();
     const { isDarkMode } = useTheme();
 
-    const [profile, setProfile] = useState(null);
-    console.log(profile, "profile")
+    const [profile, setProfile] = useState<UserProfile | null>();
     const { mutate: fetchUser, isPending, isError, error } = useApi();
     const userId = "bc0dd9ba-5963-4fca-80f5-ad9315f5a980"; // 🧑 static for now
     useEffect(() => {
@@ -65,7 +57,7 @@ const UserDetails = () => {
                     <View style={styles.profileImageWrapper}>
                         <Image source={user.profileImage} style={styles.profileImage} />
                     </View>
-                    <Text style={[styles.nameAge, globalstyle.text_40_bold_90, { lineHeight: 40 }]}>{user.name}, {user.age}</Text>
+                    <Text style={[styles.nameAge, globalstyle.text_40_bold_90, { lineHeight: 40 }]}>{profile?.firstName}, {user.age}</Text>
                     <View style={styles.locationContainer}>
                         <Image
                             source={require('../assets/icons/location.png')}
@@ -150,6 +142,7 @@ const styles = StyleSheet.create({
     },
     nameAge: {
         marginTop: 20,
+        textTransform: "capitalize"
     },
     locationContainer: {
         flexDirection: 'row',

@@ -24,11 +24,6 @@ import { createAcocuntSchema } from '@/validations/createAcocuntSchema';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
 import DateOfBirthInput from '@/component/DateOfBirthInput';
-import axios from 'axios';
-import { API_BASE_URL } from '@/apiInfo';
-import { useMutation } from '@tanstack/react-query';
-import Toast from 'react-native-toast-message';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useApi } from '@/hook/useApi';
@@ -49,7 +44,6 @@ const CreateAccount = () => {
     const {
         control,
         handleSubmit,
-        reset,
         formState: { errors },
     } = useForm<SignupFormData>({
         resolver: zodResolver(createAcocuntSchema),
@@ -58,37 +52,12 @@ const CreateAccount = () => {
             gender: "Male",
             aura: "",
             firstName: "",
-            lastName: ""
+            lastName: "",
+            phone: ""
         },
     });
 
     const email = useSelector((state: RootState) => state.profile.email);
-    console.log(email, "email")
-    const SignupUser = async (data: SignupFormData) => {
-        console.log(data);
-        try {
-            const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
-            const token = await AsyncStorage.getItem('idToken');
-            const response = await axios.post(
-                `${API_BASE_URL}/users`,
-                {
-                    email: email,
-                    birthDate: birthDate,
-                    gender: data.gender,
-                    aura: data.aura,
-                },
-                {
-                    headers: {
-                        Authorization: token,
-                    }
-                }
-            );
-            return response.data;
-        } catch (error: any) {
-            console.error('Signup error:', error?.response?.data || error.message);
-            throw error; // so React Query can handle it
-        }
-    };
     const { mutate: createUser, isPending: loading } = useApi();
     const onSubmit = (data: SignupFormData) => {
         const birthDate = `${data.dob.year}-${data.dob.month.padStart(2, '0')}-${data.dob.day.padStart(2, '0')}`;
@@ -101,13 +70,14 @@ const CreateAccount = () => {
                 gender: data.gender,
                 aura: data.aura,
                 firstName: data.firstName,
-                lastName: data.lastName
+                lastName: data.lastName,
+                phone: data.phone
             },
             showToast: true,
         },
             {
                 onSuccess: (response) => {
-                    console.log(response,"response")
+                    console.log(response, "response")
                     navigation.navigate('AccountSetupScreen');
                 },
             });
@@ -150,13 +120,6 @@ const CreateAccount = () => {
                         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                             <View style={styles.innerContainer}>
                                 <View style={styles.inputscantiner}>
-                                    {/* <Input
-                                        label="Email"
-                                        placeholder="Enter email"
-                                        leftIcon={require("../assets/icons/email.png")}
-                                        value={email}
-                                        editable={false}
-                                    /> */}
                                     <Controller
                                         control={control}
                                         name="firstName"
@@ -177,6 +140,19 @@ const CreateAccount = () => {
                                             <Input
                                                 label="Last Name"
                                                 placeholder="Enter last name"
+                                                value={value}
+                                                onChangeText={onChange}
+                                                error={errors.lastName?.message}
+                                            />
+                                        )}
+                                    />
+                                    <Controller
+                                        control={control}
+                                        name="phone"
+                                        render={({ field: { onChange, value } }) => (
+                                            <Input
+                                                label="Phone"
+                                                placeholder="Enter Phone Number"
                                                 value={value}
                                                 onChangeText={onChange}
                                                 error={errors.lastName?.message}

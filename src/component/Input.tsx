@@ -114,8 +114,6 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: 16,
         paddingVertical: 0,
-        // lineHeight: 32,
-        // textAlignVertical: 'center',
     },
     eyeIcon: {
         position: 'absolute',
