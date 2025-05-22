@@ -160,7 +160,7 @@ const SignupScreen = () => {
                                 <View style={styles.Signupbtn}>
                                     <Button
                                         variant="primary"
-                                        title={"Signup"}
+                                        title={"Sign Up"}
                                         onPress={handleSubmit(onSubmit)}
                                         isLoading={loading}
                                     />

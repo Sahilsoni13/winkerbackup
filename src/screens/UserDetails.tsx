@@ -1,4 +1,6 @@
+
 import HeaderBack from '@/component/HeaderBack';
+import UserDetailsSkeleton from '@/component/skeletons/UserDetailsSkeleton';
 import { useApi } from '@/hook/useApi';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
@@ -43,10 +45,39 @@ const UserDetails = () => {
   const globalstyle = getGlobalStyles();
   const { isDarkMode } = useTheme();
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const { mutate: fetchUser, isPending, isError, error } = useApi();
+  const { mutate: fetchUser, isPending:loading, isError, error } = useApi();
   const route = useRoute<RouteProp<RootStackParamList, 'UserDetails'>>();
   const [isCityFetching, setIsCityFetching] = useState(false);
   const { id } = route.params;
+
+    useEffect(() => {
+    fetchUser(
+      {
+        url: `/users/${id}`,
+        method: 'GET',
+        showToast: false,
+      },
+      {
+        onSuccess: async (response) => {
+          const userData = response.data as UserProfile;
+          setIsCityFetching(true);
+          let city = 'Unknown';
+          if (userData.location) {
+            const coords = parseLocation(userData.location);
+            if (coords) {
+              city = await fetchCityName(coords.latitude, coords.longitude);
+            }
+          }
+          setProfile({ ...userData, city });
+          setIsCityFetching(false);
+        },
+        onError: (err) => {
+          console.log('❌ Error fetching profile:', err.message);
+          setIsCityFetching(false);
+        },
+      }
+    );
+  }, [id, fetchUser]);
 
   // Function to parse location string
   const parseLocation = (location: string): { latitude: number; longitude: number } | null => {
@@ -87,34 +118,7 @@ const UserDetails = () => {
     return age;
   };
 
-  useEffect(() => {
-    fetchUser(
-      {
-        url: `/users/${id}`,
-        method: 'GET',
-        showToast: false,
-      },
-      {
-        onSuccess: async (response) => {
-          const userData = response.data as UserProfile;
-          setIsCityFetching(true);
-          let city = 'Unknown';
-          if (userData.location) {
-            const coords = parseLocation(userData.location);
-            if (coords) {
-              city = await fetchCityName(coords.latitude, coords.longitude);
-            }
-          }
-          setProfile({ ...userData, city });
-          setIsCityFetching(false);
-        },
-        onError: (err) => {
-          console.log('❌ Error fetching profile:', err.message);
-          setIsCityFetching(false);
-        },
-      }
-    );
-  }, [id, fetchUser]);
+
 
   return (
     <View style={[styles.container, globalstyle.container]}>
@@ -123,8 +127,9 @@ const UserDetails = () => {
         rightIcon={require('../assets/icons/status.png')}
         onRightPress={() => console.log('onRightPress')}
       />
+{
+    loading && loading ? <UserDetailsSkeleton/>:
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Profile Section */}
         <View style={styles.profileContainer}>
           <View style={styles.profileImageWrapper}>
             <Image source={user.profileImage} style={styles.profileImage} />
@@ -142,8 +147,6 @@ const UserDetails = () => {
             </Text>
           </View>
         </View>
-
-        {/* Bio Section */}
         <View style={styles.infocantainer}>
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, globalstyle.text_18_semi_90]}>
@@ -173,6 +176,7 @@ const UserDetails = () => {
           </View>
         </View>
       </ScrollView>
+}
     </View>
   );
 };

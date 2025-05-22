@@ -67,7 +67,7 @@ const OnboardingAccounts = () => {
                 <Text style={[globalstyle.text_14_reg_40]}>
                     Already have an account?
                 </Text>
-                <TouchableOpacity onPress={() => navigation.navigate("SignupScreen")}>
+                <TouchableOpacity onPress={() => navigation.navigate("LoginScreen")}>
                     <Text style={[globalstyle.text_14_bold_pur50, { marginLeft: 2 }]}>
                         Log in
                     </Text>
