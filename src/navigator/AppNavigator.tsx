@@ -10,7 +10,7 @@ import RockPaperScissorsScreen from '@/screens/RockPaperScissorsScreen';
 import CreateAccount from '@/screens/CreateAccount';
 import OtpVerificationScreen from '@/screens/OtpVerificationScreen';
 import ChatScreenchat from '@/screens/ChatBubble';
-import AccountSetupScreen from '@/screens/AccountSetupScreen';
+import AccountSetupScreen from '@/screens/AccountSetupScreen';  
 import OnboardingScreen from '@/screens/OnboardingScreen';
 import ForgotPassword from '@/screens/ForgotPassword';
 import SplashScreen from '@/screens/SplashScreen';

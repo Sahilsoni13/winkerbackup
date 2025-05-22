@@ -586,6 +586,7 @@ const LoginScreen = () => {
                 const permissionGranted = await requestLocationPermission();
                 if (permissionGranted) {
                     const { latitude, longitude } = await getUserLocation();
+                    console.log(latitude,longitude,"longitude lattitude")
                     const idToken = await AsyncStorage.getItem('idToken');
                     if (idToken) {
                         await sendLocationToBackend(latitude, longitude, idToken);

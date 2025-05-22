@@ -1,9 +1,10 @@
+import { useApi } from '@/hook/useApi';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
 import { AroundMeCardProps } from '@/types/type';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 
 /**
@@ -16,38 +17,51 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
  * @param {string} props.wink - Text for the wink button
  * @returns {JSX.Element} The rendered AroundMeCard component
  */
-const AroundMeCard: React.FC<AroundMeCardProps> = ({ name, age, location, image }) => {
+const AroundMeCard: React.FC<AroundMeCardProps> = ({ name, age, location, image, receiverId }) => {
 
-    const [wink, setWink] = useState("wink")
     /** Navigation object to handle screen transitions */
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
-
-
-
-
     const globalstyle = getGlobalStyles();
     const { isDarkMode } = useTheme();
-
-
+    const { mutate: createWink, isPending: loading } = useApi();
+    const handleCreateWink = () => {
+        createWink({
+            url: '/winks',
+            method: 'POST',
+            data: {
+                receiverId: receiverId
+            },
+            showToast: true,
+            successMessage: 'User created successfully!',
+        });
+    };
     return (
-        <TouchableOpacity onPress={() => navigation.navigate("UserDetails")} >
+        <TouchableOpacity onPress={() => navigation.navigate("UserDetails", { id: receiverId })}>
             <View style={[styles.card, !isDarkMode && globalstyle.border, { backgroundColor: isDarkMode ? colors.charcol80 : colors.white }]}>
                 {/* User profile image */}
                 <Image source={image} style={styles.image} />
                 {/* User details container */}
                 <View style={styles.textContainer}>
-                    <Text style={[globalstyle.text_16_bold_90]}>{name}, {age}</Text>
+                    <Text style={[globalstyle.text_16_bold_90, { textTransform: "capitalize" }]}>{name}, {age}</Text>
                     {/* Location section */}
                     <View style={styles.locationbox} >
-                        <Image source={require("../assets/icons/location.png")} style={[styles.locationimg,{tintColor: isDarkMode ? colors.white : colors.black}]} />
+                        <Image source={require("../assets/icons/location.png")} style={[styles.locationimg, { tintColor: isDarkMode ? colors.white : colors.black }]} />
                         <Text style={[globalstyle.text_14_reg_40]}>{location}</Text>
                     </View>
                     {/* Wink button */}
-                    <TouchableOpacity style={[styles.button, { backgroundColor: isDarkMode ? colors.white : colors.charcol100 }]} onPress={() => setWink("winked")}>
-                        <View style={styles.btncantainer} >
-                            <Image source={require("../assets/icons/lightwight.png")} style={[styles.locationimg, { tintColor: isDarkMode ? colors.black : colors.white }]} />
-                            <Text style={[globalstyle.text_14_reg_white, { color: isDarkMode ? colors.charcol100 : colors.white }]}>{wink}</Text>
-                        </View>
+                    <TouchableOpacity disabled={loading} style={[styles.button, { backgroundColor: isDarkMode ? colors.white : colors.charcol100 }]} onPress={handleCreateWink} >
+                        {
+                            loading ?
+                                <View style={styles.btncantainer}>
+                                    <ActivityIndicator color={colors.white} />
+                                    <Text style={[globalstyle.text_14_reg_white, { color: isDarkMode ? colors.charcol100 : colors.white }]}>Sending</Text>
+                                </View>
+                                :
+                                <View style={styles.btncantainer} >
+                                    <Image source={require("../assets/icons/lightwight.png")} style={[styles.locationimg, { tintColor: isDarkMode ? colors.black : colors.white }]} />
+                                    <Text style={[globalstyle.text_14_reg_white, { color: isDarkMode ? colors.charcol100 : colors.white }]}>wink</Text>
+                                </View>
+                        }
                     </TouchableOpacity>
                 </View>
             </View>

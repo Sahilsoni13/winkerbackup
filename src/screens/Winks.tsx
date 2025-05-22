@@ -1,4 +1,5 @@
 import AroundMeCard from '@/component/AroundMeCard';
+import NearbyUsersScreen from '@/component/Nearby';
 import { useApi } from '@/hook/useApi';
 import color, { globalstyle } from '@/styles/global';
 import { getGlobalStyles } from '@/styles/globaltheme';

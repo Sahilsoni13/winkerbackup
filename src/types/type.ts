@@ -107,7 +107,8 @@ export interface AroundMeCardProps {
   age: number;
   location: string;
   image?: ImageSourcePropType;
-  firstName?:string
+  firstName?:string;
+  receiverId?:string
   // wink: string
 };
 

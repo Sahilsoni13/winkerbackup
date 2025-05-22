@@ -4,6 +4,7 @@ import Input from "@/component/Input";
 import AroundMeFilterModal from "@/component/models/AroundMeFilterModal";
 import HousePartyFilterModal from "@/component/models/HousePartyFilterModal";
 import WelcomePopup from "@/component/models/WelcomePopup";
+import NearbyUsersScreen from "@/component/Nearby";
 import { colors, getGlobalStyles } from "@/styles/globaltheme";
 import { useTheme } from "@/ThemeContext";
 import { AroundMeCardProps, HousePartyCardProps } from "@/types/type";
@@ -95,16 +96,26 @@ const PartyScreen: React.FC = () => {
 
     const [isFilterVisible, setFilterVisible] = useState<boolean>(false);
     // animated tabs 
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     // Array of available filter options representing distances in meters.
-    const Aroundmeoptions = ["20m", "30m", "40m", "50m", "60m", "70m", "80m", "90m", "100m"];
-
-
+    const Aroundmeoptions = ["10", "500", "1000", "1500", "2000", "3000", "4000", "5000"];
 
     const HousePartyoptions = ["Social", "Collage", "Tea", "Tech", "Anime", "Gaming", "Manga", "Space", "Theories"];
 
     const globalstyle = getGlobalStyles();
     const { isDarkMode } = useTheme();
+
+    const [selectedRadius, setSelectedRadius] = useState<number | null>(null);
+
+  const handleApply = (radius: number | null) => {
+    setSelectedRadius(radius); // Update selected radius
+    setFilterVisible(false); // Close modal
+  };
+    const handleClear = () => {
+    setSelectedRadius(null); // Clear selected radius
+  };
+
     return (
         <View style={[globalstyle.container, { flex: 1, }]}>
             <View style={{ paddingTop: 16 }}>
@@ -119,13 +130,13 @@ const PartyScreen: React.FC = () => {
                             onPress={() => setActiveTab("houseParty")}
                             style={[styles.tabButton, activeTab === "houseParty" && { backgroundColor: isDarkMode ? colors.white : colors.charcol100 }]}
                         >
-                            <Text style={[globalstyle.text_16_med_90, activeTab === "houseParty" && {color:isDarkMode?colors.black:colors.white}]}>House Party</Text>
+                            <Text style={[globalstyle.text_16_med_90, activeTab === "houseParty" && { color: isDarkMode ? colors.black : colors.white }]}>House Party</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => setActiveTab("aroundMe")}
                             style={[styles.tabButton, activeTab === "aroundMe" && { backgroundColor: isDarkMode ? colors.white : colors.charcol100 }]}
                         >
-                            <Text style={[globalstyle.text_16_med_90, activeTab === "aroundMe"&& {color:isDarkMode?colors.black:colors.white}]}>Around Me</Text>
+                            <Text style={[globalstyle.text_16_med_90, activeTab === "aroundMe" && { color: isDarkMode ? colors.black : colors.white }]}>Around Me</Text>
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity onPress={() => setFilterVisible(true)}>
@@ -142,46 +153,48 @@ const PartyScreen: React.FC = () => {
                         activeTab === "houseParty" ? (
                             <HousePartyFilterModal options={HousePartyoptions} onClose={() => setFilterVisible(false)} />
                         ) : (
-                            <AroundMeFilterModal options={Aroundmeoptions} onClose={() => setFilterVisible(false)} />
+                            <AroundMeFilterModal visible={isFilterVisible} selectedRadius={selectedRadius} onClear={handleClear} onApply={handleApply} options={Aroundmeoptions} onClose={() => setFilterVisible(false)} />
                         )
                     )}
 
 
-                    <View style={{ flexDirection: "column", gap: 32 }}>
-                        <View>
-                            {
-                                activeTab === "houseParty" &&
+                    {
+                        activeTab === "houseParty" &&
+                        <View style={{ flexDirection: "column", gap: 32 }}>
+                            <View>
                                 < View style={styles.activehousetab} >
                                     <Text style={globalstyle.text_16_bold_90} >Trending Parties</Text>
                                     <Image style={{ width: 24, height: 22 }} source={require("../assets/icons/fire.png")} />
                                 </View>
-                            }
-                            <FlatList
-                                data={data}
-                                renderItem={renderItem}
-                                keyExtractor={(item, index) => index.toString()} // Use a unique ID if available
-                                contentContainerStyle={styles.cardList}
-                                ListEmptyComponent={<Text style={{ textAlign: "center" }}>No data available</Text>}
-                            />
-                        </View>
-                        <View>
+                                <FlatList
+                                    data={housePartyData}
+                                    renderItem={renderItem}
+                                    keyExtractor={(item, index) => index.toString()} // Use a unique ID if available
+                                    contentContainerStyle={styles.cardList}
+                                    ListEmptyComponent={<Text style={{ textAlign: "center" }}>No data available</Text>}
+                                />
+                            </View>
+                            <View>
 
-                            {
-                                activeTab === "houseParty" &&
+
                                 < View style={styles.activehousetab} >
                                     <Text style={globalstyle.text_16_bold_90} >Nearby Parties</Text>
                                     <Image style={{ width: 24, height: 22 }} source={require("../assets/icons/focus.png")} />
                                 </View>
-                            }
-                            <FlatList
-                                data={data}
-                                renderItem={renderItem}
-                                keyExtractor={(item, index) => index.toString()} // Use a unique ID if available
-                                contentContainerStyle={styles.cardList}
-                                ListEmptyComponent={<Text style={{ textAlign: "center" }}>No data available</Text>}
-                            />
+                                <FlatList
+                                    data={housePartyData}
+                                    renderItem={renderItem}
+                                    keyExtractor={(item, index) => index.toString()} // Use a unique ID if available
+                                    contentContainerStyle={styles.cardList}
+                                    ListEmptyComponent={<Text style={{ textAlign: "center" }}>No data available</Text>}
+                                />
+                            </View>
                         </View>
-                    </View>
+                    }
+                    {
+                        activeTab === "aroundMe" &&
+                        <NearbyUsersScreen radius={selectedRadius || 1000} />
+                    }
 
                 </View>
             </ScrollView>
