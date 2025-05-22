@@ -2,7 +2,7 @@
 
 import { useApi } from '@/hook/useApi';
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, RefreshControl } from 'react-native';
 import Toast from 'react-native-toast-message';
 import AroundMeCardSkeleton from './skeletons/AroundMeCardSkeleton';
 import AroundMeCard from './AroundMeCard';
@@ -60,8 +60,49 @@ const NearbyUsersScreen: React.FC<NearbyUsersScreenProps> = ({ radius = 1000 }) 
         }
     };
 
-    // Fetch nearby users and their city names
-    useEffect(() => {
+    // // Fetch nearby users and their city names
+    // useEffect(() => {
+    //     mutate(
+    //         {
+    //             url: '/users/nearby',
+    //             method: 'POST',
+    //             showToast: false,
+    //             data: {
+    //                 radius: radius,
+    //             },
+    //         },
+    //         {
+    //             onSuccess: async (response) => {
+    //                 console.log(response.data, 'response.data');
+    //                 const users = response.data as NearbyUser[];
+    //                 if (users.length === 0) {
+    //                     setNearbyUsers([]);
+    //                     return; // No users, skip city fetching
+    //                 }
+    //                 setIsCityFetching(true); // Start city fetching
+    //                 const usersWithCities = await Promise.all(
+    //                     users.map(async (user) => ({
+    //                         ...user,
+    //                         city: await fetchCityName(user.location.latitude, user.location.longitude),
+    //                     }))
+    //                 );
+    //                 setNearbyUsers(usersWithCities);
+    //                 setIsCityFetching(false); // City fetching complete
+    //             },
+    //             onError: (err) => {
+    //                 console.log('Error fetching nearby:', err.message);
+    //                 setIsCityFetching(false); // Ensure city fetching is reset on error
+    //             },
+    //         }
+    //     );
+    // }, [mutate, radius]);
+
+    // Add this new state
+    const [refreshing, setRefreshing] = useState(false);
+
+    // Create a separate function to fetch users (for reuse in pull-to-refresh)
+    const fetchNearbyUsers = () => {
+        setRefreshing(true); // Show refresh loader
         mutate(
             {
                 url: '/users/nearby',
@@ -73,13 +114,14 @@ const NearbyUsersScreen: React.FC<NearbyUsersScreenProps> = ({ radius = 1000 }) 
             },
             {
                 onSuccess: async (response) => {
-                    console.log(response.data, 'response.data');
                     const users = response.data as NearbyUser[];
                     if (users.length === 0) {
                         setNearbyUsers([]);
-                        return; // No users, skip city fetching
+                        setRefreshing(false);
+                        return;
                     }
-                    setIsCityFetching(true); // Start city fetching
+
+                    setIsCityFetching(true);
                     const usersWithCities = await Promise.all(
                         users.map(async (user) => ({
                             ...user,
@@ -87,18 +129,28 @@ const NearbyUsersScreen: React.FC<NearbyUsersScreenProps> = ({ radius = 1000 }) 
                         }))
                     );
                     setNearbyUsers(usersWithCities);
-                    setIsCityFetching(false); // City fetching complete
+                    setIsCityFetching(false);
+                    setRefreshing(false);
                 },
                 onError: (err) => {
                     console.log('Error fetching nearby:', err.message);
-                    setIsCityFetching(false); // Ensure city fetching is reset on error
+                    setIsCityFetching(false);
+                    setRefreshing(false);
                 },
             }
         );
-    }, [mutate, radius]);
+    };
 
+    // useEffect to trigger once on mount
+    useEffect(() => {
+        fetchNearbyUsers();
+    }, [radius]);
     return (
-        <View style={[styles.container]}>
+        <ScrollView
+            contentContainerStyle={styles.container}
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={fetchNearbyUsers} />
+            }>
             {isPending || isCityFetching ? (
                 <AroundMeCardSkeleton />
             ) : nearbyUsers.length > 0 ? (
@@ -116,7 +168,7 @@ const NearbyUsersScreen: React.FC<NearbyUsersScreenProps> = ({ radius = 1000 }) 
                 <Text style={styles.emptyText}>No users found nearby.</Text>
             )}
             <Toast />
-        </View>
+        </ScrollView>
     );
 };
 

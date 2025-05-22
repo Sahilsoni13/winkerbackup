@@ -559,9 +559,7 @@ const LoginScreen = () => {
                                 },
                                 onError: (err) => {
                                     console.log('Error fetching profile:', err.message);
-                                    // Fallback to CreateAccount
-                                    console.log("Navigating to CreateAccount due to error");
-                                    navigation.navigate("CreateAccount", { email: data.email });
+                                    // navigation.navigate("CreateAccount", { email: data.email });
                                 },
                             }
                         );

@@ -1,11 +1,13 @@
 import Button from '@/component/Button'
 import HeaderBack from '@/component/HeaderBack'
 import SecurityToggle from '@/component/SecurityToggle'
+import { useApi } from '@/hook/useApi'
 import color, { globalstyle } from '@/styles/global'
-import { getGlobalStyles } from '@/styles/globaltheme'
+import { colors, getGlobalStyles } from '@/styles/globaltheme'
 import { useTheme } from '@/ThemeContext'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
 import React from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 
 /**
@@ -14,7 +16,21 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
  */
 const PrivacySecurity = () => {
     const globalstyle = getGlobalStyles();
-    const { isDarkMode } = useTheme();
+    const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
+    const { mutate: deleteUser, isPending: loading } = useApi();
+    const handleDelete = () => {
+        deleteUser(
+            {
+                url: '/users/profile', // 123 is user id
+                method: 'DELETE',
+                showToast: true,
+            }, {
+            onSuccess: () => (
+                navigation.navigate("OnboardingScreen")
+            )
+        }
+        );
+    };
 
     return (
         <>
@@ -39,8 +55,12 @@ const PrivacySecurity = () => {
                         title='Password Management'
                     />
                 </View>
-                <TouchableOpacity style={style.deleteButton}>
-                    <Image style={style.deleteIcon} source={require('@/assets/icons/deleteicon.png')} />
+                <TouchableOpacity style={style.deleteButton} onPress={handleDelete}>
+                    {loading ?
+                        <ActivityIndicator color={colors.orange} />
+                        :
+                        <Image style={style.deleteIcon} source={require('@/assets/icons/deleteicon.png')} />
+                    }
                     <Text style={[globalstyle.text_14_bold_orange]}>
                         Delete Account
                     </Text>

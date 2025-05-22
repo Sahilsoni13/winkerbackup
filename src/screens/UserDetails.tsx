@@ -13,6 +13,8 @@ type RootStackParamList = {
   UserDetails: { id: string };
 };
 
+// 30.132831 74.206145 'longitude lattitude'
+
 // Type for Nominatim response
 type GeocodeResponse = {
   address: {
@@ -45,12 +47,12 @@ const UserDetails = () => {
   const globalstyle = getGlobalStyles();
   const { isDarkMode } = useTheme();
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const { mutate: fetchUser, isPending:loading, isError, error } = useApi();
+  const { mutate: fetchUser, isPending: loading, isError, error } = useApi();
   const route = useRoute<RouteProp<RootStackParamList, 'UserDetails'>>();
   const [isCityFetching, setIsCityFetching] = useState(false);
   const { id } = route.params;
-
-    useEffect(() => {
+  useEffect(() => {
+    if(!id) return
     fetchUser(
       {
         url: `/users/${id}`,
@@ -127,56 +129,57 @@ const UserDetails = () => {
         rightIcon={require('../assets/icons/status.png')}
         onRightPress={() => console.log('onRightPress')}
       />
-{
-    loading && loading ? <UserDetailsSkeleton/>:
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.profileContainer}>
-          <View style={styles.profileImageWrapper}>
-            <Image source={user.profileImage} style={styles.profileImage} />
-          </View>
-          <Text style={[styles.nameAge, globalstyle.text_40_bold_90, { lineHeight: 40 }]}>
-            {profile?.firstName || user.name}, {profile?.birthDate ? calculateAge(profile.birthDate) : user.age}
-          </Text>
-          <View style={styles.locationContainer}>
-            <Image
-              source={require('../assets/icons/location.png')}
-              style={[styles.locationIcon, { tintColor: isDarkMode ? colors.white : colors.black }]}
-            />
-            <Text style={[globalstyle.text_18_reg_90]}>
-              {isCityFetching ? 'Loading...' : profile?.city || 'Unknown'}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.infocantainer}>
-          <View style={styles.section}>
-            <Text style={[styles.sectionTitle, globalstyle.text_18_semi_90]}>
-              My Aura <Text>✨</Text>
-            </Text>
-            <View style={[styles.bioContainer, globalstyle.border]}>
-              <Text style={[globalstyle.text_14_reg_60, { color: isDarkMode ? colors.charcol30 : colors.charcol60 }]}>
-                {profile?.aura || user.bio}
+      {
+        loading || isCityFetching ? <UserDetailsSkeleton /> :
+          profile &&
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.profileContainer}>
+              <View style={styles.profileImageWrapper}>
+                <Image source={user.profileImage} style={styles.profileImage} />
+              </View>
+              <Text style={[styles.nameAge, globalstyle.text_40_bold_90, { lineHeight: 40 }]}>
+                {profile?.firstName || user.name}, {profile?.birthDate ? calculateAge(profile.birthDate) : user.age}
               </Text>
+              <View style={styles.locationContainer}>
+                <Image
+                  source={require('../assets/icons/location.png')}
+                  style={[styles.locationIcon, { tintColor: isDarkMode ? colors.white : colors.black }]}
+                />
+                <Text style={[globalstyle.text_18_reg_90]}>
+                  {isCityFetching ? 'Loading...' : profile?.city || 'Unknown'}
+                </Text>
+              </View>
             </View>
-          </View>
-          {/* Joined Parties Section */}
-          <View style={styles.section}>
-            <Text style={[styles.sectionTitle, globalstyle.text_18_semi_90]}>
-              Joined Parties <Text>🎉</Text>
-            </Text>
-            <View style={[globalstyle.border, styles.joinedContainer]}>
-              {user.joinedParties.map((item, index) => (
-                <View
-                  key={Date.now() + index + 'joinedlist'}
-                  style={[styles.partyTag, { backgroundColor: isDarkMode ? colors.charcol80 : colors.charcol05 }]}
-                >
-                  <Text style={globalstyle.text_14_semi_90}>{item}</Text>
+            <View style={styles.infocantainer}>
+              <View style={styles.section}>
+                <Text style={[styles.sectionTitle, globalstyle.text_18_semi_90]}>
+                  My Aura <Text>✨</Text>
+                </Text>
+                <View style={[styles.bioContainer, globalstyle.border]}>
+                  <Text style={[globalstyle.text_14_reg_60, { color: isDarkMode ? colors.charcol30 : colors.charcol60 }]}>
+                    {profile?.aura || user.bio}
+                  </Text>
                 </View>
-              ))}
+              </View>
+              {/* Joined Parties Section */}
+              <View style={styles.section}>
+                <Text style={[styles.sectionTitle, globalstyle.text_18_semi_90]}>
+                  Joined Parties <Text>🎉</Text>
+                </Text>
+                <View style={[globalstyle.border, styles.joinedContainer]}>
+                  {user.joinedParties.map((item, index) => (
+                    <View
+                      key={Date.now() + index + 'joinedlist'}
+                      style={[styles.partyTag, { backgroundColor: isDarkMode ? colors.charcol80 : colors.charcol05 }]}
+                    >
+                      <Text style={globalstyle.text_14_semi_90}>{item}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
             </View>
-          </View>
-        </View>
-      </ScrollView>
-}
+          </ScrollView>
+      }
     </View>
   );
 };

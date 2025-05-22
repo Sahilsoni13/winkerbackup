@@ -109,7 +109,17 @@ export interface AroundMeCardProps {
   image?: ImageSourcePropType;
   firstName?:string;
   receiverId?:string
-  // wink: string
+};
+export interface WinkReceiveCardProps {
+  id:string,
+  name?: string;
+  age: number;
+  location: string;
+  image?: ImageSourcePropType;
+  firstName?:string;
+  senderId?:string;
+  isAccepted?:boolean;
+  status?:string
 };
 
 

@@ -25,9 +25,6 @@ import { OtpInput } from "react-native-otp-entry";
 import { colors, getGlobalStyles } from "@/styles/globaltheme";
 import { useTheme } from "@/ThemeContext";
 import Toast from "react-native-toast-message";
-import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
-import { API_BASE_URL } from "@/apiInfo";
 import { useApi } from "@/hook/useApi";
 
 const OtpVerificationScreen = () => {
@@ -84,9 +81,9 @@ const OtpVerificationScreen = () => {
 
   const handleResend = () => {
     resendOtp({
-      url: '/auth/signup',
+      url: '/auth/resend-verification',
       method: 'POST',
-      data: { email, password },
+      data: { email },
       showToast: true,
     });
   };
@@ -168,12 +165,16 @@ const OtpVerificationScreen = () => {
                 </View>
 
                 <View style={{ flexDirection: "column", gap: 16, marginTop: 16 }}>
-                  <TouchableOpacity onPress={() => handleResend()} >
+                  <View style={[{flexDirection:"row",alignItems:"center",justifyContent:"center"}]}>
+
                     <Text style={[styles.resendText, globalstyle.text_14_reg_40]}>
-                      Didn't receive the code?{" "}
-                      <Text style={globalstyle.text_14_bold_pur50}> {isResending && <ActivityIndicator />} Resend Code</Text>
+                      Didn't receive the code?{" "} 
                     </Text>
+                     {isResending && <ActivityIndicator color={colors.purple50} />}
+                  <TouchableOpacity disabled={isResending} onPress={() => handleResend()} >
+                      <Text style={[globalstyle.text_14_bold_pur50,]}> Resend Code</Text>
                   </TouchableOpacity>
+                  </View>
                   <Button
                     variant="primary"
                     onPress={() => handleVerify()}
