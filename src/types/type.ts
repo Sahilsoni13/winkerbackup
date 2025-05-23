@@ -52,6 +52,7 @@ export interface HeaderProps {
   title?: string;
   rightIcon?: ImageSourcePropType;
   onRightPress?: () => void;
+  customback?: () => void
 }
 
 
@@ -293,9 +294,9 @@ export interface PopupProps {
 
 // Define the type for the images object
 export interface GameImages {
-  Rock: ImageSourcePropType;
-  Paper: ImageSourcePropType;
-  Scissors: ImageSourcePropType;
+  ROCK: ImageSourcePropType;
+  PAPER: ImageSourcePropType;
+  SCISSORS: ImageSourcePropType;
 }
 
 export interface HousePartyFilterModalProps {

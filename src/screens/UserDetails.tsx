@@ -4,10 +4,10 @@ import UserDetailsSkeleton from '@/component/skeletons/UserDetailsSkeleton';
 import { useApi } from '@/hook/useApi';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 type RootStackParamList = {
   UserDetails: { id: string };
@@ -52,7 +52,7 @@ const UserDetails = () => {
   const [isCityFetching, setIsCityFetching] = useState(false);
   const { id } = route.params;
   useEffect(() => {
-    if(!id) return
+    if (!id) return
     fetchUser(
       {
         url: `/users/${id}`,
@@ -120,7 +120,7 @@ const UserDetails = () => {
     return age;
   };
 
-
+  const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
 
   return (
     <View style={[styles.container, globalstyle.container]}>
@@ -128,6 +128,7 @@ const UserDetails = () => {
         title="User Details"
         rightIcon={require('../assets/icons/status.png')}
         onRightPress={() => console.log('onRightPress')}
+        customback={()=>navigation.navigate("Winks")}
       />
       {
         loading || isCityFetching ? <UserDetailsSkeleton /> :
@@ -178,6 +179,10 @@ const UserDetails = () => {
                 </View>
               </View>
             </View>
+
+            {/* <TouchableOpacity onPress={() => navigation.navigate("Winks")} >
+              <Text>ksdfsjyfgdsd</Text>
+            </TouchableOpacity> */}
           </ScrollView>
       }
     </View>

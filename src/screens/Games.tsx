@@ -1,6 +1,7 @@
 import GameCard from '@/component/GameCard';
+import { useApi } from '@/hook/useApi';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 /**
@@ -42,7 +43,29 @@ const Games = () => {
         },
     ];
 
+    const { mutate: fetchGames, isPending: loading, data } = useApi();
+
+    useEffect(() => {
+        fetchGames(
+            {
+                method: "GET",
+                url: "/games",
+                showToast: true
+                
+            },
+            {
+                onSuccess: (response) => (
+                    console.log(response.data, "response")
+                ),
+                onError: (err) => (
+                    console.log(err, "error")
+                )
+            }
+        )
+    }, [])
+
     const globalstyle = getGlobalStyles();
+
     return (
         <View style={[styles.container, globalstyle.container]}>
             <ScrollView

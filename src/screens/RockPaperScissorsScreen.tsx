@@ -1,4 +1,5 @@
 import Button from '@/component/Button';
+import { useApi } from '@/hook/useApi';
 import color, { globalstyle } from '@/styles/global';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
@@ -9,7 +10,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator, Ani
 
 // Define types for the game state and moves
 type GameState = 'initial' | 'waiting' | 'win' | 'lose';
-type Move = 'Rock' | 'Paper' | 'Scissors';
+type Move = 'ROCK' | 'PAPER' | 'SCISSORS';
 
 
 /**
@@ -25,7 +26,7 @@ const RockPaperScissorsScreen: React.FC = () => {
     const [gameState, setGameState] = useState<GameState>('initial');
 
     // State to store the user's selected move
-    const [userMove, setUserMove] = useState<Move>('Rock');
+    const [userMove, setUserMove] = useState<Move>('ROCK');
 
     // State to store the opponent's move
     const [opponentMove, setOpponentMove] = useState<Move | null>(null);
@@ -36,15 +37,15 @@ const RockPaperScissorsScreen: React.FC = () => {
 
     // Object mapping each move to its corresponding image
     const images: GameImages = {
-        Rock: require('../assets/images/Rock1.png'),
-        Paper: require('../assets/images/Paper.png'),
-        Scissors: require('../assets/images/Scissors.png'),
+        ROCK: require('../assets/images/Rock1.png'),
+        PAPER: require('../assets/images/Paper.png'),
+        SCISSORS: require('../assets/images/Scissors.png'),
     };
 
     /**
          * @constant {Move[]} moves - Array of possible moves in the game
          */
-    const moves: Move[] = ['Rock', 'Paper', 'Scissors'];
+    const moves: Move[] = ['ROCK', 'PAPER', 'SCISSORS'];
 
 
     /**
@@ -57,9 +58,9 @@ const RockPaperScissorsScreen: React.FC = () => {
     const determineWinner = (user: Move, opponent: Move): 'win' | 'lose' | 'tie' => {
         if (user === opponent) return 'tie';
         if (
-            (user === 'Rock' && opponent === 'Scissors') ||
-            (user === 'Paper' && opponent === 'Rock') ||
-            (user === 'Scissors' && opponent === 'Paper')
+            (user === 'ROCK' && opponent === 'SCISSORS') ||
+            (user === 'PAPER' && opponent === 'ROCK') ||
+            (user === 'SCISSORS' && opponent === 'PAPER')
         ) {
             return 'win';
         }
@@ -103,7 +104,7 @@ const RockPaperScissorsScreen: React.FC = () => {
 
     const playAgain = () => {
         setGameState('initial');
-        setUserMove('Rock');
+        setUserMove('ROCK');
         setOpponentMove(null);
         setResultMessage('Choose Your Move');
     };
@@ -140,7 +141,6 @@ const RockPaperScissorsScreen: React.FC = () => {
             }
         };
     }, [gameState]);
-
     const rotateInterpolate = rotateAnim.interpolate({
         inputRange: [0, 1],
         outputRange: ["0deg", "360deg"],
@@ -148,6 +148,47 @@ const RockPaperScissorsScreen: React.FC = () => {
 
     const globalstyle = getGlobalStyles();
     const { isDarkMode } = useTheme();
+
+    const { mutate: createMove, isPending: loading } = useApi();
+    const { mutate: getGameStatus, } = useApi();
+
+    const gameId = "95a9f1d2-8fb1-4719-b71e-65c4fb07f2e3";
+    const handleCreateMove = (move: string) => {
+        createMove(
+            {
+                method: "POST",
+                url: `/games/${gameId}/move`,
+                showToast: true,
+                data: {
+                    move: move
+                }
+            },
+            {
+                onSuccess: (response) => (
+                    console.log(response.data, "response"),
+                    getGameStatus(
+                        {
+                            method: "GET",
+                            url: `/games/${gameId}`,
+                            showToast: true
+                        },
+                        {
+                            onSuccess: (response) => (
+                                console.log(response.data, "gamestatus")
+                            ),
+                            onError: (err) => (
+                                console.log(err, "gamestatuserror")
+                            )
+                        }
+                    )
+                ),
+                onError: (err) => (
+                    console.log(err, "error")
+                )
+            }
+        )
+    }
+
 
     return (
         <View style={[styles.container, globalstyle.container]}>
@@ -200,16 +241,16 @@ const RockPaperScissorsScreen: React.FC = () => {
                             key={move}
                             style={[
                                 styles.moveButton,
-                                userMove === move && {backgroundColor:isDarkMode?colors.white:colors.charcol100},
+                                userMove === move && { backgroundColor: isDarkMode ? colors.white : colors.charcol100 },
                                 gameState === 'waiting' && styles.disabledButton,
                             ]}
-                            onPress={() => handleMoveSelection(move)}
+                            onPress={() => { handleMoveSelection(move), handleCreateMove(move) }}
                             disabled={gameState === 'waiting'}
                         >
                             <Text
                                 style={[
                                     globalstyle.text_16_med_90,
-                                    userMove === move && {color:isDarkMode?color.black:color.white},
+                                    userMove === move && { color: isDarkMode ? color.black : color.white },
                                 ]}
                             >
                                 {move}

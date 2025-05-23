@@ -10,7 +10,6 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
  */
 const OnboardingAccounts = () => {
     const globalstyle = getGlobalStyles();
-
     /** Navigation object to handle screen transitions */
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
     return (
@@ -59,6 +58,7 @@ const OnboardingAccounts = () => {
                     variant="outlined"
                     leftIcon={require("../../assets/icons/email.png")}
                     style={styles.button}
+                    onPress={()=>navigation.navigate("SignupScreen")}
                 />
 
             </View>

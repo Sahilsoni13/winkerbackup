@@ -16,15 +16,23 @@ import { useTheme } from "@/ThemeContext";
  * @returns {JSX.Element} - A header component with a back button, optional title, and optional right icon.
  */
 
-const HeaderBack: React.FC<HeaderProps> = ({ title, rightIcon, onRightPress }) => {
+const HeaderBack: React.FC<HeaderProps> = ({ title, rightIcon, onRightPress, customback }) => {
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
     const globalstyle = getGlobalStyles();
 
     const { isDarkMode } = useTheme();
+
+    const handleBack = () => {
+        if (typeof customback === "function") {
+            customback();
+        } else {
+            navigation.goBack();
+        }
+    };
     return (
         <View style={[styles.container, { backgroundColor: isDarkMode ? colors.charcol100 : colors.white }]}>
             {/* Back Button (Always on Left) */}
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity onPress={handleBack}>
                 <Image style={[styles.icon, { tintColor: isDarkMode ? colors.white : colors.black }]} source={require("../assets/icons/backarrow.png")} />
             </TouchableOpacity>
 

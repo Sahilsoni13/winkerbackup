@@ -15,6 +15,8 @@ type NearbyUser = {
     birthDate: string;
     location: { latitude: number; longitude: number };
     city?: string;
+    profilePictureUrl: string
+
 };
 
 // Type for Nominatim response (simplified)
@@ -152,16 +154,19 @@ const NearbyUsersScreen: React.FC<NearbyUsersScreenProps> = ({ radius = 1000 }) 
                 <RefreshControl refreshing={refreshing} onRefresh={fetchNearbyUsers} />
             }>
             {isPending || isCityFetching ? (
-                <AroundMeCardSkeleton />
+                Array.from({ length: 5 }).map((_, index) => (
+                    <AroundMeCardSkeleton key={index} />
+                ))
             ) : nearbyUsers.length > 0 ? (
                 nearbyUsers.map((item, index) => (
                     console.log(item.id),
                     <AroundMeCard
                         receiverId={item.id}
                         key={item.id}
-                        age={calculateAge(item.birthDate)}
+                        age={calculateAge(item.birthDate) || 18}
                         location={item.city || 'Unknown'}
-                        name={item.firstName}
+                        name={item.firstName || "User"}
+                        image={item.profilePictureUrl || require("@/assets/images/cardimg2.png")}
                     />
                 ))
             ) : (
