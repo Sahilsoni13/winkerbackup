@@ -4,7 +4,7 @@ import color, { globalstyle } from '@/styles/global';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
 import { GameImages } from '@/types/type';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator, Animated, Easing } from 'react-native';
 
@@ -18,10 +18,14 @@ type Move = 'ROCK' | 'PAPER' | 'SCISSORS';
  * @description A React component that implements a Rock Paper Scissors game, allowing users to select a move, play against a simulated opponent, and view the result.
  * @returns {JSX.Element} The Rock Paper Scissors game screen component
  */
+type RootStackParamList = {
+    Games: { gameId: string };
+};
 const RockPaperScissorsScreen: React.FC = () => {
+    const route = useRoute<RouteProp<RootStackParamList, 'Games'>>();
 
-
-
+    const { gameId } = route.params;
+    console.log(gameId, "=rockgame")
     //    State to track the current state of the game
     const [gameState, setGameState] = useState<GameState>('initial');
 
@@ -152,7 +156,6 @@ const RockPaperScissorsScreen: React.FC = () => {
     const { mutate: createMove, isPending: loading } = useApi();
     const { mutate: getGameStatus, } = useApi();
 
-    const gameId = "95a9f1d2-8fb1-4719-b71e-65c4fb07f2e3";
     const handleCreateMove = (move: string) => {
         createMove(
             {

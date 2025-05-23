@@ -219,6 +219,7 @@ export interface GameCardProps {
   image: ImageSourcePropType;
   backgroundColor: string;
   screenName: string;
+  gameId?:string
 }
 
 

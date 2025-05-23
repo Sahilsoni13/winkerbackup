@@ -1,6 +1,7 @@
 import GameCard from '@/component/GameCard';
 import { useApi } from '@/hook/useApi';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -8,15 +9,19 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
  * Component displaying a list of interactive games for user selection
  * @returns {JSX.Element} The rendered Games component
  */
+type RootStackParamList = {
+    Winks: { gameId: string };
+};
 const Games = () => {
-
+    const route = useRoute<RouteProp<RootStackParamList, 'Winks'>>();
+    const { gameId } = route.params;
+    console.log(gameId, "=gameid")
     /** Placeholder images for game cards */
     const gameImages = {
         rockPaperScissors: require('../assets/images/RockPaper.png'),
         throwDart: require('../assets/images/ThrowDart.png'),
         spinTheWheel: require('../assets/images/SpintheWheel.png'),
     };
-
 
     /** Data array defining the games to display */
     const games = [
@@ -51,7 +56,7 @@ const Games = () => {
                 method: "GET",
                 url: "/games",
                 showToast: true
-                
+
             },
             {
                 onSuccess: (response) => (
@@ -78,6 +83,7 @@ const Games = () => {
                     {/* Game Cards */}
                     {games && games?.map((game, index) => (
                         <GameCard
+                            gameId={gameId}
                             key={index}
                             title={game.title}
                             description={game.description}

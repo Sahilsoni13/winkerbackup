@@ -420,7 +420,7 @@ import { API_BASE_URL } from "@/apiInfo";
 import { SignupSchema } from "@/validations/SignupSchema";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import { setEmail } from "@/redux/profileSlice";
+import { setEmail } from "@/redux/slices/profileSlice";
 import Geolocation from 'react-native-geolocation-service';
 import { useApi } from "@/hook/useApi";
 
