@@ -26,6 +26,8 @@ import { colors, getGlobalStyles } from "@/styles/globaltheme";
 import { useTheme } from "@/ThemeContext";
 import Toast from "react-native-toast-message";
 import { useApi } from "@/hook/useApi";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const OtpVerificationScreen = () => {
   const navigation = useNavigation<NavigationProp<any>>();
@@ -38,10 +40,13 @@ const OtpVerificationScreen = () => {
 
   const globalstyle = getGlobalStyles();
   const { isDarkMode } = useTheme();
+  const headerHeight = useHeaderHeight();
+      const insets = useSafeAreaInsets();
 
   useEffect(() => {
     const showSub = Keyboard.addListener('keyboardDidShow', (event) => {
-      setKeyboardOffset(Platform.OS === 'ios' ? event.endCoordinates.height + 20 : 25);
+      // setKeyboardOffset(Platform.OS === 'ios' ? event.endCoordinates.height + 20 : 40);
+                  setKeyboardOffset(Platform.OS === 'ios' ? headerHeight+ insets.bottom: 40);
     });
     const hideSub = Keyboard.addListener('keyboardDidHide', () => setKeyboardOffset(0));
     return () => {

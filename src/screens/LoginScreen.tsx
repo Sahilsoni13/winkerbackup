@@ -423,6 +423,8 @@ import { useDispatch } from "react-redux";
 import { setEmail } from "@/redux/profileSlice";
 import Geolocation from 'react-native-geolocation-service';
 import { useApi } from "@/hook/useApi";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export interface Profile {
     id: string;
@@ -480,6 +482,8 @@ const LoginScreen = () => {
     const [profile, setProfile] = useState<Profile | null>(null);
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
     const [keyboardOffset, setKeyboardOffset] = useState(0);
+    const headerHeight = useHeaderHeight();
+        const insets = useSafeAreaInsets();
     const { control, handleSubmit, formState: { errors }, reset } = useForm<LoginFormData>({
         resolver: zodResolver(SignupSchema),
         defaultValues: {
@@ -601,7 +605,9 @@ const LoginScreen = () => {
 
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => {
-            setKeyboardOffset(Platform.OS === 'ios' ? event.endCoordinates.height + 20 : 40);
+            // setKeyboardOffset(Platform.OS === 'ios' ? event.endCoordinates.height + 20 : 40);
+            setKeyboardOffset(Platform.OS === 'ios' ? headerHeight+ insets.bottom: 40);
+
         });
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
             setKeyboardOffset(0);

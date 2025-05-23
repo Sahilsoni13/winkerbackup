@@ -169,17 +169,19 @@ import Input from "@/component/Input";
 import HeaderBack from "@/component/HeaderBack";
 import Button from "@/component/Button";
 import { forgotPasswordSchema } from "@/validations/forgotValidation";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import color, { globalstyle } from "@/styles/global";
 import { getGlobalStyles } from "@/styles/globaltheme";
 import { useTheme } from "@/ThemeContext";
+import { useHeaderHeight } from "@react-navigation/elements";
 
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 const ForgotPassword = () => {
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
     const [keyboardOffset, setKeyboardOffset] = useState(0);
-
+const headerHeight = useHeaderHeight();
+    const insets = useSafeAreaInsets();
     const {
         control,
         handleSubmit,
@@ -194,7 +196,8 @@ const ForgotPassword = () => {
 
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", (event) => {
-            setKeyboardOffset(Platform.OS === "ios" ? event.endCoordinates.height + 20 : 40);
+            // setKeyboardOffset(Platform.OS === 'ios' ? event.endCoordinates.height + 20 : 40);
+                        setKeyboardOffset(Platform.OS === 'ios' ? headerHeight+ insets.bottom: 40);
         });
 
         const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {

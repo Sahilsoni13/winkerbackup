@@ -25,13 +25,16 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { API_BASE_URL } from "@/apiInfo";
 import { SignupSchema } from "@/validations/SignupSchema";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type SignupFormData = z.infer<typeof SignupSchema>;
 
 const SignupScreen = () => {
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
     const [keyboardOffset, setKeyboardOffset] = useState(0);
-
+const headerHeight = useHeaderHeight();
+    const insets = useSafeAreaInsets();
     const {
         control,
         handleSubmit,
@@ -92,7 +95,8 @@ const SignupScreen = () => {
 
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => {
-            setKeyboardOffset(Platform.OS === 'ios' ? event.endCoordinates.height + 20 : 40);
+            // setKeyboardOffset(Platform.OS === 'ios' ? event.endCoordinates.height + 20 : 40);
+                        setKeyboardOffset(Platform.OS === 'ios' ? headerHeight+ insets.bottom: 40);
         });
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
             setKeyboardOffset(0);
