@@ -1,10 +1,13 @@
 import { useApi } from '@/hook/useApi';
+import { fetchReceivedWinks } from '@/redux/slices/winkerSlice';
+import { AppDispatch } from '@/redux/store';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
 import { AroundMeCardProps, WinkReceiveCardProps } from '@/types/type';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useDispatch, } from 'react-redux';
 
 
 /**
@@ -17,13 +20,16 @@ import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } fr
  * @param {string} props.wink - Text for the wink button
  * @returns {JSX.Element} The rendered AroundMeCard component
  */
-const WinkReceiveCard: React.FC<WinkReceiveCardProps> = ({ name, age, location, image, senderId, id, status}) => {
-
+const WinkReceiveCard: React.FC<WinkReceiveCardProps> = ({ name, age, location, image, senderId, id, status }) => {
+    // const  = useSelector();
     /** Navigation object to handle screen transitions */
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
     const globalstyle = getGlobalStyles();
     const { isDarkMode } = useTheme();
-    const { mutate: createWink, isPending: loading } = useApi();
+    const { mutate: createWink, data, isPending: loading } = useApi();
+    const dispatch = useDispatch<AppDispatch>(); // Use typed dispatch
+
+
     const handleCreateWink = () => {
         createWink(
             {
@@ -34,8 +40,23 @@ const WinkReceiveCard: React.FC<WinkReceiveCardProps> = ({ name, age, location, 
                 },
                 showToast: true,
             },
+            {
+                onSuccess: (response) => (
+                    console.log(response.data.game),
+                    navigation.navigate("Games",{
+                        gameId:response.data.game.id
+                    })
+                ),
+                onError: (err) => (console.log(err))
+            }
         );
     };
+
+    // useEffect(() => {
+    //      dispatch(fetchReceivedWinks()).finally(() => {
+    //      });
+    // }, [data])
+
     return (
         <TouchableOpacity onPress={() => navigation.navigate("UserDetails", { id: senderId })}>
             <View style={[styles.card, !isDarkMode && globalstyle.border, { backgroundColor: isDarkMode ? colors.charcol80 : colors.white }]}>

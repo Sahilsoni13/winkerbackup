@@ -1,12 +1,14 @@
 import AroundMeCardSkeleton from '@/component/skeletons/AroundMeCardSkeleton';
 import WinkReceiveCard from '@/component/WinkReceiveCard';
-import { useApi } from '@/hook/useApi';
 import color from '@/styles/global';
 import { getGlobalStyles } from '@/styles/globaltheme';
 import { WinkReceiveCardProps } from '@/types/type';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View, RefreshControl } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchReceivedWinks, clearError } from '@/redux/slices/winkerSlice';
+import { AppDispatch, RootState } from '@/redux/store'; // Adjust path to your store
 
 const imageMap: { [key: string]: any } = {
   'cardimg1.png': require('../assets/images/cardimg1.png'),
@@ -17,40 +19,31 @@ const imageMap: { [key: string]: any } = {
 
 const Winks = () => {
   const globalstyle = getGlobalStyles();
-  const [winks, setWinks] = useState<WinkReceiveCardProps[]>([]);
-  const { mutate: fetchWink, isPending: loading } = useApi();
+  const dispatch = useDispatch<AppDispatch>(); // Use typed dispatch
+  const { winks, loading, error } = useSelector((state: RootState) => state.winker);
   const [refreshing, setRefreshing] = useState(false);
-  const [initialFetchDone, setInitialFetchDone] = useState(false); // New state to track initial fetch
+  const [initialFetchDone, setInitialFetchDone] = useState(false);
 
   const loadWinks = useCallback(() => {
     setRefreshing(true);
-    fetchWink(
-      {
-        url: '/winks/received',
-        method: 'GET',
-        showToast: false,
-      },
-      {
-        onSuccess: (response) => {
-          const winkData = Array.isArray(response.data) ? response.data : [];
-          setWinks(winkData);
-          setRefreshing(false);
-          setInitialFetchDone(true); // Mark initial fetch as complete
-        },
-        onError: (err) => {
-          console.log('Error fetching winks:', err.message);
-          setRefreshing(false);
-          setInitialFetchDone(true); // Mark initial fetch as complete even on error
-        },
-      }
-    );
-  }, [fetchWink]);
+    dispatch(fetchReceivedWinks()).finally(() => {
+      setRefreshing(false);
+      setInitialFetchDone(true);
+    });
+  }, [dispatch]);
 
-  useFocusEffect(
-    useCallback(() => {
-      loadWinks();
-    }, [loadWinks])
-  );
+  useEffect(() => {
+    dispatch(fetchReceivedWinks()).finally(() => {
+      setInitialFetchDone(true);
+    });
+  }, [dispatch]);
+
+  // Optionally clear error on component mount or refresh
+  useEffect(() => {
+    if (error) {
+      dispatch(clearError());
+    }
+  }, [dispatch, error]);
 
   return (
     <View style={[styles.container, globalstyle.container]}>
@@ -64,14 +57,11 @@ const Winks = () => {
         }
       >
         {(loading || !initialFetchDone) ? (
-          <View style={[{ flexDirection: "column", gap: 16 }]}>
-            {
-              Array.from({ length: 6 }).map((_, index) => (
-                <AroundMeCardSkeleton key={index} />
-              ))
-            }
+          <View style={[{ flexDirection: 'column', gap: 16 }]}>
+            {Array.from({ length: 6 }).map((_, index) => (
+              <AroundMeCardSkeleton key={index} />
+            ))}
           </View>
-
         ) : winks.length <= 0 ? (
           <View style={styles.noWinksContainer}>
             <Image source={require('../assets/images/noitem.png')} style={styles.noWinksImage} />
@@ -84,14 +74,14 @@ const Winks = () => {
             {winks.map((person, index) => (
               <WinkReceiveCard
                 key={index}
-                name={'name'}
-                firstName={'name'}
-                age={15}
+                name={'name'} // Replace with actual data if available
+                firstName={'name'} // Replace with actual data if available
+                age={15} // Replace with actual data if available
                 senderId={person.senderId}
                 id={person.id}
-                location={'abohar'}
+                location={'abohar'} // Replace with actual data if available
                 status={person.isAccepted ? 'Winked' : 'Wink back'}
-                image={require('@/assets/images/cardimg2.png')}
+                image={require('@/assets/images/cardimg2.png')} // Replace with actual image if available
               />
             ))}
           </View>

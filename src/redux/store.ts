@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import profileReducer from './profileSlice';
-
+import profileReducer from './slices/profileSlice';
+import winkerReducer from './slices/winkerSlice';
 export const store = configureStore({
   reducer: {
     profile: profileReducer,
+    winker: winkerReducer,
   },
 });
 

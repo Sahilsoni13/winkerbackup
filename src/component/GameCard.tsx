@@ -17,14 +17,16 @@ import { useTheme } from '@/ThemeContext';
  * @param {string} props.screenName - The name of the screen to navigate to when the card is pressed
  * @returns {JSX.Element} The game card component
  */
-const GameCard: React.FC<GameCardProps> = ({ title, description, image, backgroundColor, screenName }) => {
+const GameCard: React.FC<GameCardProps> = ({ title, description, image, backgroundColor, screenName,gameId }) => {
     // Navigation object to handle screen transitions
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>(); // ✅ Hook inside component
     const globalstyle = getGlobalStyles();
     const { isDarkMode } = useTheme();
-
+console.log(gameId,"gameid")
     return (
-        <TouchableOpacity onPress={() => navigation.navigate(screenName as never)}>
+        <TouchableOpacity onPress={() => navigation.navigate(screenName,{
+            gameId:gameId
+        })}>
             <View style={[styles.card, !isDarkMode && globalstyle.border, { backgroundColor: isDarkMode ? colors.charcol80 : colors.white }]}>
                 <View style={[styles.imagebox, { backgroundColor }]} >
                     <Image source={image} style={styles.cardImage} />
