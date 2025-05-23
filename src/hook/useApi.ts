@@ -177,7 +177,6 @@ export const useApi = () => {
 
         return response.data;
     };
-
     const {
         mutate,
         isPending,
