@@ -44,7 +44,7 @@ const CreateAccount = () => {
     const globalstyle = getGlobalStyles();
     const { isDarkMode } = useTheme();
     const headerHeight = useHeaderHeight();
-        const insets = useSafeAreaInsets();
+    const insets = useSafeAreaInsets();
     const {
         control,
         handleSubmit,
@@ -89,7 +89,7 @@ const CreateAccount = () => {
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => {
             // setKeyboardOffset(Platform.OS === 'ios' ? event.endCoordinates.height + 20 : 40);
-                        setKeyboardOffset(Platform.OS === 'ios' ? headerHeight+ insets.bottom: 40);
+            setKeyboardOffset(Platform.OS === 'ios' ? headerHeight + insets.bottom : 40);
         });
 
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {

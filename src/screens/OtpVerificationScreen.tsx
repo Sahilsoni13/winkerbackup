@@ -41,12 +41,12 @@ const OtpVerificationScreen = () => {
   const globalstyle = getGlobalStyles();
   const { isDarkMode } = useTheme();
   const headerHeight = useHeaderHeight();
-      const insets = useSafeAreaInsets();
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     const showSub = Keyboard.addListener('keyboardDidShow', (event) => {
       // setKeyboardOffset(Platform.OS === 'ios' ? event.endCoordinates.height + 20 : 40);
-                  setKeyboardOffset(Platform.OS === 'ios' ? headerHeight+ insets.bottom: 40);
+      setKeyboardOffset(Platform.OS === 'ios' ? headerHeight + insets.bottom : 40);
     });
     const hideSub = Keyboard.addListener('keyboardDidHide', () => setKeyboardOffset(0));
     return () => {
@@ -170,15 +170,15 @@ const OtpVerificationScreen = () => {
                 </View>
 
                 <View style={{ flexDirection: "column", gap: 16, marginTop: 16 }}>
-                  <View style={[{flexDirection:"row",alignItems:"center",justifyContent:"center"}]}>
+                  <View style={[{ flexDirection: "row", alignItems: "center", justifyContent: "center" }]}>
 
                     <Text style={[styles.resendText, globalstyle.text_14_reg_40]}>
-                      Didn't receive the code?{" "} 
+                      Didn't receive the code?{" "}
                     </Text>
-                     {isResending && <ActivityIndicator color={colors.purple50} />}
-                  <TouchableOpacity disabled={isResending} onPress={() => handleResend()} >
+                    {isResending && <ActivityIndicator color={colors.purple50} />}
+                    <TouchableOpacity disabled={isResending} onPress={() => handleResend()} >
                       <Text style={[globalstyle.text_14_bold_pur50,]}> Resend Code</Text>
-                  </TouchableOpacity>
+                    </TouchableOpacity>
                   </View>
                   <Button
                     variant="primary"

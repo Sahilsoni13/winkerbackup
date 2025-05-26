@@ -80,7 +80,6 @@ const EditProfile = () => {
 
     const email = useSelector((state: RootState) => state.profile.email);
 
-    // Fetch previous data
     useEffect(() => {
         fetchPreviousData(
             {

@@ -33,7 +33,7 @@ type SignupFormData = z.infer<typeof SignupSchema>;
 const SignupScreen = () => {
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
     const [keyboardOffset, setKeyboardOffset] = useState(0);
-const headerHeight = useHeaderHeight();
+    const headerHeight = useHeaderHeight();
     const insets = useSafeAreaInsets();
     const {
         control,
@@ -96,7 +96,7 @@ const headerHeight = useHeaderHeight();
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => {
             // setKeyboardOffset(Platform.OS === 'ios' ? event.endCoordinates.height + 20 : 40);
-                        setKeyboardOffset(Platform.OS === 'ios' ? headerHeight+ insets.bottom: 40);
+            setKeyboardOffset(Platform.OS === 'ios' ? headerHeight + insets.bottom : 40);
         });
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
             setKeyboardOffset(0);
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     title: {
         marginBottom: 20,
     },
-   
+
     Signupbtn: {
         width: "100%",
         marginTop: 32,

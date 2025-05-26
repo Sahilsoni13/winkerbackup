@@ -483,7 +483,7 @@ const LoginScreen = () => {
     const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
     const [keyboardOffset, setKeyboardOffset] = useState(0);
     const headerHeight = useHeaderHeight();
-        const insets = useSafeAreaInsets();
+    const insets = useSafeAreaInsets();
     const { control, handleSubmit, formState: { errors }, reset } = useForm<LoginFormData>({
         resolver: zodResolver(SignupSchema),
         defaultValues: {
@@ -588,7 +588,7 @@ const LoginScreen = () => {
                 const permissionGranted = await requestLocationPermission();
                 if (permissionGranted) {
                     const { latitude, longitude } = await getUserLocation();
-                    console.log(latitude,longitude,"longitude lattitude")
+                    console.log(latitude, longitude, "longitude lattitude")
                     const idToken = await AsyncStorage.getItem('idToken');
                     if (idToken) {
                         await sendLocationToBackend(latitude, longitude, idToken);
@@ -606,7 +606,7 @@ const LoginScreen = () => {
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => {
             // setKeyboardOffset(Platform.OS === 'ios' ? event.endCoordinates.height + 20 : 40);
-            setKeyboardOffset(Platform.OS === 'ios' ? headerHeight+ insets.bottom: 40);
+            setKeyboardOffset(Platform.OS === 'ios' ? headerHeight + insets.bottom : 40);
 
         });
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
