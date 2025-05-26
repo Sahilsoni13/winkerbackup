@@ -2,25 +2,18 @@ import AroundMeCardSkeleton from '@/component/skeletons/AroundMeCardSkeleton';
 import WinkReceiveCard from '@/component/WinkReceiveCard';
 import color from '@/styles/global';
 import { getGlobalStyles } from '@/styles/globaltheme';
-import { WinkReceiveCardProps } from '@/types/type';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View, RefreshControl } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchReceivedWinks, clearError } from '@/redux/slices/winkerSlice';
 import { AppDispatch, RootState } from '@/redux/store'; // Adjust path to your store
-
-const imageMap: { [key: string]: any } = {
-  'cardimg1.png': require('../assets/images/cardimg1.png'),
-  'cardimg2.png': require('../assets/images/cardimg2.png'),
-  'cardimg3.png': require('../assets/images/cardimg3.png'),
-  'cardimg4.png': require('../assets/images/cardimg4.png'),
-};
+import { calculateAge } from '@/utils/calculateAge';
 
 const Winks = () => {
   const globalstyle = getGlobalStyles();
   const dispatch = useDispatch<AppDispatch>(); // Use typed dispatch
   const { winks, loading, error } = useSelector((state: RootState) => state.winker);
+  console.log(winks, "winks")
   const [refreshing, setRefreshing] = useState(false);
   const [initialFetchDone, setInitialFetchDone] = useState(false);
 
@@ -48,7 +41,6 @@ const Winks = () => {
   return (
     <View style={[styles.container, globalstyle.container]}>
       <Text style={[globalstyle.text_16_bold_90, styles.heading]}>People who wink at you</Text>
-
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
@@ -74,14 +66,13 @@ const Winks = () => {
             {winks.map((person, index) => (
               <WinkReceiveCard
                 key={index}
-                name={'name'} // Replace with actual data if available
-                firstName={'name'} // Replace with actual data if available
-                age={15} // Replace with actual data if available
-                senderId={person.senderId}
+                name={person.sender.firstName || "User"}
+                age={calculateAge(person.sender.birthDate) || 20}
+                senderId={person.sender.id}
                 id={person.id}
-                location={'abohar'} // Replace with actual data if available
+                location={person.sender.location}
                 status={person.isAccepted ? 'Winked' : 'Wink back'}
-                image={require('@/assets/images/cardimg2.png')} // Replace with actual image if available
+                image={person.sender.profilePictureUrls[0] || require('@/assets/images/cardimg2.png')}
               />
             ))}
           </View>

@@ -4,6 +4,7 @@ import { AppDispatch } from '@/redux/store';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
 import { AroundMeCardProps, WinkReceiveCardProps } from '@/types/type';
+import { getCityFromLocationString } from '@/utils/getCityFromLocation';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -43,20 +44,17 @@ const WinkReceiveCard: React.FC<WinkReceiveCardProps> = ({ name, age, location, 
             {
                 onSuccess: (response) => (
                     console.log(response.data.game),
-                    navigation.navigate("Games",{
-                        gameId:response.data.game.id
+                    dispatch(fetchReceivedWinks()).finally(() => {
+                    }),
+                    navigation.navigate("Games", {
+                        gameId: response.data.game.id
                     })
                 ),
                 onError: (err) => (console.log(err))
             }
         );
     };
-
-    // useEffect(() => {
-    //      dispatch(fetchReceivedWinks()).finally(() => {
-    //      });
-    // }, [data])
-
+    const city = getCityFromLocationString(location);
     return (
         <TouchableOpacity onPress={() => navigation.navigate("UserDetails", { id: senderId })}>
             <View style={[styles.card, !isDarkMode && globalstyle.border, { backgroundColor: isDarkMode ? colors.charcol80 : colors.white }]}>
@@ -68,10 +66,10 @@ const WinkReceiveCard: React.FC<WinkReceiveCardProps> = ({ name, age, location, 
                     {/* Location section */}
                     <View style={styles.locationbox} >
                         <Image source={require("../assets/icons/location.png")} style={[styles.locationimg, { tintColor: isDarkMode ? colors.white : colors.black }]} />
-                        <Text style={[globalstyle.text_14_reg_40]}>{location}</Text>
+                        <Text style={[globalstyle.text_14_reg_40]}>{city || "Unknown"}</Text>
                     </View>
                     {/* Wink button */}
-                    <TouchableOpacity disabled={loading} style={[styles.button, { backgroundColor: isDarkMode ? colors.white : colors.charcol100 }]} onPress={handleCreateWink} >
+                    <TouchableOpacity disabled={status === "Winked" && true} style={[styles.button, { backgroundColor: isDarkMode ? colors.white : colors.charcol100 }]} onPress={handleCreateWink} >
                         {
                             loading ?
                                 <View style={styles.btncantainer}>
