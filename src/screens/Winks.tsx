@@ -13,7 +13,6 @@ const Winks = () => {
   const globalstyle = getGlobalStyles();
   const dispatch = useDispatch<AppDispatch>(); // Use typed dispatch
   const { winks, loading, error } = useSelector((state: RootState) => state.winker);
-  console.log(winks, "winks")
   const [refreshing, setRefreshing] = useState(false);
   const [initialFetchDone, setInitialFetchDone] = useState(false);
 

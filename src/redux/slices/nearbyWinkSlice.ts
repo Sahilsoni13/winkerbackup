@@ -1,80 +1,80 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { API_BASE_URL } from '@/apiInfo';
 
-interface Wink {
+type NearbyUser = {
   id: string;
-  isAccepted: boolean;
-  createdAt: string;
-  updatedAt: string;
-  sender:{
-    id:string,
-    firstName:string,
-    birthDate:string,
-     location:string,
-     profilePictureUrls:string[]
-  },
-  receiver:{
-      id:string,
-  }
-}
+  firstName: string;
+  birthDate: string;
+  location: { latitude: number; longitude: number };
+  profilePictureUrl: string;
+  city?: string;
+};
 
-interface WinkerState {
-  winks: Wink[];
+type NearbyUsersState = {
+  users: NearbyUser[];
   loading: boolean;
   error: string | null;
-}
+};
 
-const initialState: WinkerState = {
-  winks: [],
+const initialState: NearbyUsersState = {
+  users: [],
   loading: false,
   error: null,
 };
 
-// Async thunk to fetch received winks
-export const fetchSentWinks = createAsyncThunk(
-  'winker/fetchReceivedWinks',
-  async (_, { rejectWithValue }) => {
+const fetchCityName = async (latitude: number, longitude: number): Promise<string> => {
+  try {
+    const response = await axios.get(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10`
+    );
+    const { city, town, village } = response.data.address;
+    return city || town || village || 'Unknown';
+  } catch (error) {
+    console.error('Error fetching city:', error);
+    return 'Unknown';
+  }
+};
+
+export const fetchNearbyUsers = createAsyncThunk(
+  'nearbyUsers/fetchNearbyUsers',
+  async (radius: number, { rejectWithValue }) => {
     try {
-      const token = await AsyncStorage.getItem('idToken') || '';
-      const response = await axios.get(`${API_BASE_URL}/winks`, {
-        headers: {
-          Accept: 'application/json',
-          Authorization: `${token}`,
-        },
-      });
-      return response.data.data;
+      const response = await axios.post('/users/nearby', { radius });
+      const users: NearbyUser[] = response.data;
+
+      const usersWithCities = await Promise.all(
+        users.map(async (user) => ({
+          ...user,
+          city: await fetchCityName(user.location.latitude, user.location.longitude),
+        }))
+      );
+
+      return usersWithCities;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch winks');
+      return rejectWithValue(error.message || 'Failed to fetch nearby users');
     }
   }
 );
 
-const nearbyWinkSlice = createSlice({
-  name: 'nearbyWink',
+const nearbyUsersSlice = createSlice({
+  name: 'nearbyUsers',
   initialState,
-  reducers: {
-    clearError: (state) => {
-      state.error = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchSentWinks.pending, (state) => {
+      .addCase(fetchNearbyUsers.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchSentWinks.fulfilled, (state, action) => {
+      .addCase(fetchNearbyUsers.fulfilled, (state, action) => {
+        state.users = action.payload;
         state.loading = false;
-        state.winks = action.payload;
       })
-      .addCase(fetchSentWinks.rejected, (state, action) => {
+      .addCase(fetchNearbyUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
   },
 });
 
-export const { clearError } = nearbyWinkSlice.actions;
-export default nearbyWinkSlice.reducer;
+export default nearbyUsersSlice.reducer;
