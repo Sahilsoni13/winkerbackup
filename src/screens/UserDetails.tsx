@@ -4,8 +4,9 @@ import UserDetailsSkeleton from '@/component/skeletons/UserDetailsSkeleton';
 import { useApi } from '@/hook/useApi';
 import { colors, getGlobalStyles } from '@/styles/globaltheme';
 import { useTheme } from '@/ThemeContext';
+import { calculateAge } from '@/utils/calculateAge';
+import { getCityFromLocationString } from '@/utils/getCityFromLocation';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -49,7 +50,6 @@ const UserDetails = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const { mutate: fetchUser, isPending: loading, isError, error } = useApi();
   const route = useRoute<RouteProp<RootStackParamList, 'UserDetails'>>();
-  const [isCityFetching, setIsCityFetching] = useState(false);
   const { id } = route.params;
   useEffect(() => {
     if (!id) return
@@ -62,63 +62,14 @@ const UserDetails = () => {
       {
         onSuccess: async (response) => {
           const userData = response.data as UserProfile;
-          setIsCityFetching(true);
-          let city = 'Unknown';
-          if (userData.location) {
-            const coords = parseLocation(userData.location);
-            if (coords) {
-              city = await fetchCityName(coords.latitude, coords.longitude);
-            }
-          }
-          setProfile({ ...userData, city });
-          setIsCityFetching(false);
+          setProfile(userData);
         },
         onError: (err) => {
           console.log('❌ Error fetching profile:', err.message);
-          setIsCityFetching(false);
         },
       }
     );
   }, [id, fetchUser]);
-
-  // Function to parse location string
-  const parseLocation = (location: string): { latitude: number; longitude: number } | null => {
-    try {
-      const [latitude, longitude] = location.split(',').map(coord => parseFloat(coord.trim()));
-      if (isNaN(latitude) || isNaN(longitude)) {
-        throw new Error('Invalid coordinates');
-      }
-      return { latitude, longitude };
-    } catch (err) {
-      console.log('Error parsing location:', err);
-      return null;
-    }
-  };
-
-  // Function to fetch city name using Nominatim
-  const fetchCityName = async (latitude: number, longitude: number): Promise<string> => {
-    try {
-      const response = await axios.get<GeocodeResponse>(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10`
-      );
-      const { city, town, village } = response.data.address;
-      return city || town || village || 'Unknown';
-    } catch (err) {
-      console.log('Error fetching city:', err);
-      return 'Unknown';
-    }
-  };
-
-  const calculateAge = (birthDate: string): number => {
-    const today = new Date();
-    const birth = new Date(birthDate);
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-      age--;
-    }
-    return age;
-  };
 
   const navigation = useNavigation<NavigationProp<Record<string, object | undefined>>>();
 
@@ -128,10 +79,10 @@ const UserDetails = () => {
         title="User Details"
         rightIcon={require('../assets/icons/status.png')}
         onRightPress={() => console.log('onRightPress')}
-        customback={()=>navigation.navigate("Winks")}
+        customback={() => navigation.navigate("Winks")}
       />
       {
-        loading || isCityFetching ? <UserDetailsSkeleton /> :
+        loading ? <UserDetailsSkeleton /> :
           profile &&
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.profileContainer}>
@@ -147,7 +98,9 @@ const UserDetails = () => {
                   style={[styles.locationIcon, { tintColor: isDarkMode ? colors.white : colors.black }]}
                 />
                 <Text style={[globalstyle.text_18_reg_90]}>
-                  {isCityFetching ? 'Loading...' : profile?.city || 'Unknown'}
+                  {
+                    getCityFromLocationString(profile.location || "Unknown")
+                  }
                 </Text>
               </View>
             </View>
@@ -157,7 +110,7 @@ const UserDetails = () => {
                   My Aura <Text>✨</Text>
                 </Text>
                 <View style={[styles.bioContainer, globalstyle.border]}>
-                  <Text style={[globalstyle.text_14_reg_60, { color: isDarkMode ? colors.charcol30 : colors.charcol60 }]}>
+                  <Text style={[globalstyle.text_14_reg_60, { color: isDarkMode ? colors.charcol30 : colors.charcol60,textTransform:"capitalize" }]}>
                     {profile?.aura || user.bio}
                   </Text>
                 </View>
@@ -179,10 +132,6 @@ const UserDetails = () => {
                 </View>
               </View>
             </View>
-
-            {/* <TouchableOpacity onPress={() => navigation.navigate("Winks")} >
-              <Text>ksdfsjyfgdsd</Text>
-            </TouchableOpacity> */}
           </ScrollView>
       }
     </View>
@@ -244,6 +193,7 @@ const styles = StyleSheet.create({
   section: {
     marginTop: 16,
     alignItems: 'center',
+    width:"100%"
   },
   sectionTitle: {
     marginBottom: 8,
@@ -251,9 +201,12 @@ const styles = StyleSheet.create({
   bioContainer: {
     borderRadius: 16,
     padding: 20,
+    width:"100%"
   },
   infocantainer: {
     padding: 8,
+    width:"100%",
+    flex:1
   },
   joinedContainer: {
     flexDirection: 'row',

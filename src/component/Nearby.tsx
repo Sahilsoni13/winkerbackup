@@ -2,11 +2,12 @@
 
 import { useApi } from '@/hook/useApi';
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, ScrollView, RefreshControl } from 'react-native';
+import {  StyleSheet, Text, ScrollView, RefreshControl } from 'react-native';
 import Toast from 'react-native-toast-message';
 import AroundMeCardSkeleton from './skeletons/AroundMeCardSkeleton';
 import AroundMeCard from './AroundMeCard';
 import axios from 'axios';
+import { calculateAge } from '@/utils/calculateAge';
 
 // Type for the nearby user response
 type NearbyUser = {
@@ -15,7 +16,7 @@ type NearbyUser = {
     birthDate: string;
     location: { latitude: number; longitude: number };
     city?: string;
-    profilePictureUrl: string
+    profilePictureUrls: string[]
 
 };
 
@@ -36,17 +37,6 @@ const NearbyUsersScreen: React.FC<NearbyUsersScreenProps> = ({ radius = 1000 }) 
     const { mutate, isPending, isError, isSuccess, error } = useApi();
     const [nearbyUsers, setNearbyUsers] = useState<NearbyUser[]>([]);
     const [isCityFetching, setIsCityFetching] = useState(false); // New state for city fetching
-
-    const calculateAge = (birthDate: string): number => {
-        const today = new Date();
-        const birth = new Date(birthDate);
-        let age = today.getFullYear() - birth.getFullYear();
-        const monthDiff = today.getMonth() - birth.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-            age--;
-        }
-        return age;
-    };
 
     // Function to fetch city name using Nominatim
     const fetchCityName = async (latitude: number, longitude: number): Promise<string> => {
@@ -158,15 +148,14 @@ const NearbyUsersScreen: React.FC<NearbyUsersScreenProps> = ({ radius = 1000 }) 
                     <AroundMeCardSkeleton key={index} />
                 ))
             ) : nearbyUsers.length > 0 ? (
-                nearbyUsers.map((item, index) => (
-                    console.log(item.id),
+                nearbyUsers.map((item) => (
                     <AroundMeCard
                         receiverId={item.id}
                         key={item.id}
                         age={calculateAge(item.birthDate) || 18}
                         location={item.city || 'Unknown'}
                         name={item.firstName || "User"}
-                        image={item.profilePictureUrl || require("@/assets/images/cardimg2.png")}
+                        image={item.profilePictureUrls[0] || require("@/assets/images/cardimg2.png")}
                     />
                 ))
             ) : (

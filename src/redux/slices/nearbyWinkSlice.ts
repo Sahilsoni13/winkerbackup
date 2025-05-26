@@ -33,12 +33,12 @@ const initialState: WinkerState = {
 };
 
 // Async thunk to fetch received winks
-export const fetchReceivedWinks = createAsyncThunk(
+export const fetchSentWinks = createAsyncThunk(
   'winker/fetchReceivedWinks',
   async (_, { rejectWithValue }) => {
     try {
       const token = await AsyncStorage.getItem('idToken') || '';
-      const response = await axios.get(`${API_BASE_URL}/winks/received`, {
+      const response = await axios.get(`${API_BASE_URL}/winks`, {
         headers: {
           Accept: 'application/json',
           Authorization: `${token}`,
@@ -51,8 +51,8 @@ export const fetchReceivedWinks = createAsyncThunk(
   }
 );
 
-const winkerSlice = createSlice({
-  name: 'winker',
+const nearbyWinkSlice = createSlice({
+  name: 'nearbyWink',
   initialState,
   reducers: {
     clearError: (state) => {
@@ -61,20 +61,20 @@ const winkerSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchReceivedWinks.pending, (state) => {
+      .addCase(fetchSentWinks.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchReceivedWinks.fulfilled, (state, action) => {
+      .addCase(fetchSentWinks.fulfilled, (state, action) => {
         state.loading = false;
         state.winks = action.payload;
       })
-      .addCase(fetchReceivedWinks.rejected, (state, action) => {
+      .addCase(fetchSentWinks.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
   },
 });
 
-export const { clearError } = winkerSlice.actions;
-export default winkerSlice.reducer;
+export const { clearError } = nearbyWinkSlice.actions;
+export default nearbyWinkSlice.reducer;
